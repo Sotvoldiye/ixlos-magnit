@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-
+import style from "./topNav.module.css"
 const slides = [
   {
     id: 1,
@@ -47,7 +47,7 @@ export default function HeroCarousel() {
   }, [current, paused]);
 
   return (
-    <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden mt-4">
+    <div className={`relative w-full h-[400px] overflow-hidden ${style.carusel}`}>
       <div className="flex transition-transform duration-700 ease-in-out"
            style={{ transform: `translateX(-${current * 100}%)` }}
       >
@@ -56,14 +56,10 @@ export default function HeroCarousel() {
             <img
               src={slide.image}
               alt={slide.title}
-              className="w-full h-[400px] md:h-[500px] object-cover"
+              className={`w-full md:h-[500px] object-cover ${style.caruselImg}`}
             />
             <div className="absolute inset-0 bg-black/40 flex items-center justify-start px-8 md:px-16">
               <div className="text-white max-w-md space-y-4">
-                <p className="text-sm font-medium">
-                  <span className="inline-block align-middle mr-2">✔</span>
-                  EBAY GUARANTEED FIT
-                </p>
                 <h2 className="text-3xl md:text-5xl font-bold leading-tight">
                   {slide.title}
                 </h2>

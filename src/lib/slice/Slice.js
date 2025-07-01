@@ -65,29 +65,54 @@ const cartSlice = createSlice({
 });
 
 /* FAVORUTE SLICE */
-const favoruteInitialState = {
-  items: []
-};
-
 const favoruteSlice = createSlice({
-  name: 'favorute',  // To'g'irlandi
-  initialState: favoruteInitialState,
+  name: 'favorute',
+  initialState: {
+    items: []
+  },
   reducers: {
-    addFavorute(state, action) {
-      const exists = state.items.find((item) => item.id === action.payload.id);
+    setFavoruteItems: (state, action) => {
+      state.items = action.payload;
+    },
+    addFavorute: (state, action) => {
+      const exists = state.items.find(item => item.id === action.payload.id);
       if (!exists) {
         state.items.push(action.payload);
       }
     },
-    removeFavorute(state, action) {
-      state.items = state.items.filter((item) => item.id !== action.payload.id);
-    },
+    removeFavorute: (state, action) => {
+      state.items = state.items.filter(item => item.id !== action.payload.id);
+    }
   }
 });
 
+
+/* badge slice */
+const bagSlice = createSlice({
+  name:'bag',
+  initialState:{
+    items:[]
+  },
+  reducers:{
+    setBags:(state, action)=>{
+        state.items = action.payload;
+    },
+    addBags: (state, action)=>{
+      const exists = state.items.find(item =>item.id === action.payload.id)
+      if (!exists){
+        state.items.push(action.payload)
+      }
+    },
+    removerBags: (state, action)=> {
+      state.items = state.items.filter(item => item.id !== action.payload.id)
+    }
+  }
+})
+
 /* USER SLICE */
+
 const userInitialState = {
-  user: true,
+  user: null,
   authReady: false,
 };
 
@@ -101,11 +126,11 @@ const userSlice = createSlice({
     logout: (state) => {
       state.user = null;
     },
-    isAuthReady: (state) => {
+    setAuthReady: (state) => {
       state.authReady = true;
     },
   },
-});
+})
 
 /* EXPORT ACTIONS */
 export const {
@@ -117,7 +142,7 @@ export const {
 
 export const { addToCart, removeFromCart } = cartSlice.actions;
 export const { login, logout, isAuthReady } = userSlice.actions;
-export const { addFavorute, removeFavorute } = favoruteSlice.actions;
+export const { setFavoruteItems, addFavorute, removeFavorute } = favoruteSlice.actions;
 
 /* EXPORT REDUCERS */
 export const counterReducer = counterSlice.reducer;

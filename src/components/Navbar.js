@@ -1,33 +1,25 @@
-"use client";
+'use client';
 
 import React from "react";
 import TopNavbar from "./TopNavbar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import Link from "next/link";
 import { useGetAllProductsQuery } from "@/lib/api/productApi";
 import { useParams, useRouter } from "next/navigation";
 import CategoriesList from "./CategoriesListX";
 import CategoryListY from "./CategoryListY";
-
+import style from "./topNav.module.css"
+import TopNavbarScleton from "./TopNavbarScleton";
 export default function Navbar() {
-  const router = useRouter();
-  const { category } = useParams();
   const { data, isLoading, error } = useGetAllProductsQuery();
 
-  if (isLoading) return <p>Loading...</p>;
+
+  if (isLoading) return <div><TopNavbarScleton/></div>;
   if (error) return <p>Error: {error.message}</p>;
 
   const categories = [...new Set(data.products.map((p) => p.category))];
 
   return (
-    <header className="pt-2">
+    <header className={`pt-2 ${style.nav}`}>
       <TopNavbar />
 
       {/* Main Navbar */}
@@ -38,8 +30,8 @@ export default function Navbar() {
           </h1>
         </Link>
 
-        <form className="flex flex-grow items-center gap-4">
-          <div className="flex items-center flex-grow border border-black rounded-3xl px-4 py-2 gap-3">
+        <form className="flex  flex-grow items-center gap-4">
+          <div className={`flex items-center flex-grow border border-black rounded-3xl px-4 py-2 gap-3 ${style.searchingInput}`}>
             <i className="fa-solid fa-magnifying-glass text-gray-500"></i>
             <input
               className="flex-grow outline-none border-none text-sm"

@@ -7,6 +7,25 @@ import {
 } from './slice/Slice';
 import { productApi } from './api/productApi';
 
+// LocalStorage dan favoritlar olish funksiyasi
+const loadFavoritesFromLocalStorage = () => {
+  if (typeof window !== 'undefined') {
+    try {
+      const serialized = localStorage.getItem("favorite");
+      return serialized ? JSON.parse(serialized) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+  return [];
+};
+
+const preloadedState = {
+  favorute: {
+    items: loadFavoritesFromLocalStorage()
+  }
+};
+
 const store = configureStore({
   reducer: {
     [productApi.reducerPath]: productApi.reducer,
@@ -15,6 +34,7 @@ const store = configureStore({
     user: userReducer,
     favorute: favoruteReducer,
   },
+  preloadedState, // ← bu joy muhim
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(productApi.middleware),
 });

@@ -1,12 +1,17 @@
-import Navbar from "@/components/Navbar";
-import Category from "./categorys/page";
+'use client';
+
 import HeroCarousel from "@/components/heroCarusel";
+import Category from "@/app/categorys/page";
+import SplashScreen from "@/components/SplashScreen";
+import { useEffect, useState } from "react";
+
 export default function Home() {
+
   return (
-    <div className=" min-h-screen font-[family-name:var(--font-geist-sans)]">
+    <div className="min-h-screen">
       <main>
-        <HeroCarousel/>
-        <Category/>
+        <HeroCarousel />
+        <Category />
       </main>
     </div>
   );

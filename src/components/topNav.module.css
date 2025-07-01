@@ -1,0 +1,26 @@
+
+
+.mobileNav{
+   display: none;
+}
+
+
+
+@media (max-width:620px){
+   .nav{
+      display: none;
+   }
+   .mobileNav{
+      display: block;
+   }
+   .carusel{
+      height: 200px;
+      .caruselImg{
+         height: 200px;
+      }
+   }
+   .searchingInput{
+      display: block;
+      width: 100%;
+   }
+}
