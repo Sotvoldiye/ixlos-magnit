@@ -50,6 +50,10 @@
     display: none;
     font-family: 'Akronim', sans-serif ;
   }
+
+  .ixlos{
+    display: none;
+  }
   
   @media (max-width:450px){
     .full_logo {
@@ -79,6 +83,9 @@
       align-items: center;
       padding-top: 100px;
       font-weight: 900;
+    }
+    .ixlos{
+      display: flex;
     }
 
   }

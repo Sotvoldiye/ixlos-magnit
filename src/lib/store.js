@@ -4,6 +4,7 @@ import {
   cartReducer,
   userReducer,
   favoruteReducer,
+  bagReducer,
 } from './slice/Slice';
 import { productApi } from './api/productApi';
 
@@ -33,6 +34,7 @@ const store = configureStore({
     cart: cartReducer,
     user: userReducer,
     favorute: favoruteReducer,
+    bags:bagReducer,
   },
   preloadedState, // ← bu joy muhim
   middleware: (getDefaultMiddleware) =>

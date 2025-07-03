@@ -143,9 +143,10 @@ export const {
 export const { addToCart, removeFromCart } = cartSlice.actions;
 export const { login, logout, isAuthReady } = userSlice.actions;
 export const { setFavoruteItems, addFavorute, removeFavorute } = favoruteSlice.actions;
-
+export const {setBags, addBags, removerBags}= bagSlice
 /* EXPORT REDUCERS */
 export const counterReducer = counterSlice.reducer;
 export const cartReducer = cartSlice.reducer;
 export const userReducer = userSlice.reducer;
 export const favoruteReducer = favoruteSlice.reducer;
+export const bagReducer = bagSlice.reducer
