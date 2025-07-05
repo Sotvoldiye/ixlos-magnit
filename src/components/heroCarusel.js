@@ -53,7 +53,7 @@ export default function HeroCarousel() {
       >
         {slides.map((slide) => (
           <div key={slide.id} className="w-full flex-shrink-0 relative">
-            <img
+            <Image
               src={slide.image}
               alt={slide.title}
               className={`w-full md:h-[500px] object-cover ${style.caruselImg}`}

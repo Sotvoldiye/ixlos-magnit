@@ -69,7 +69,7 @@ export default function ProductPage() {
             <div className="flex items-center gap-5">
               {" "}
               <Button onClick={buyProduct}>Sotib olish</Button>
-              <Button variant="green">Savatga qo'shish</Button>
+              <Button variant="green">Savatga qo&#39;shish</Button>
             </div>
           </div>
         </div>

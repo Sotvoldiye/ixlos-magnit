@@ -3,6 +3,7 @@
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
 import style from "./SplashScreen.module.css"; // E'tibor bering
+import Image from "next/image";
 
 const rows = 12;
 const cols = 12;
@@ -68,7 +69,7 @@ const SplashScreen = ({ onFinish }) => {
   return (
     <div ref={containerRef} className={style.splash_container}>
       {!showTiles && (
-        <img  src="/images/logo.jpg" alt="Logo" className={style.full_logo} />
+        <Image  src="/images/logo.jpg" alt="Logo" className={style.full_logo} />
       )}
       {showTiles && <div className={style.grid}>{tiles}</div>}
        

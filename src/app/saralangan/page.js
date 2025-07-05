@@ -2,6 +2,7 @@
 import Cards from '@/components/Cards';
 import Help_Report from '@/components/Help&Report';
 import { removeFavorute, setFavoruteItems } from '@/lib/slice/Slice';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaBullseye } from 'react-icons/fa';
@@ -70,7 +71,7 @@ export default function FavoritePage() {
 
         {/* Rasm */}
         <Link href={`/product/${item.id}`}>
-          <img
+          <Image
             src={item?.thumbnail}
             alt={item?.title}
             width={300}
@@ -83,7 +84,7 @@ export default function FavoritePage() {
       {/* Mahsulot nomi va narxi */}
       <Link href={`/product/${item.id}`}>
         <p className="text-sm font-medium text-gray-800 line-clamp-1">{item?.title}</p>
-        <p className="text-[15px] text-gray-900 font-semibold">{item?.price} so'm</p>
+        <p className="text-[15px] text-gray-900 font-semibold">{item?.price} so&#39;m</p>
       </Link>
 
       {/* Ellipsis va modal */}

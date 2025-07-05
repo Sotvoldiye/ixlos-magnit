@@ -95,7 +95,7 @@ export default function Login({ onClose }) {
               type="submit"
               className="w-full bg-green-600 text-white py-2 rounded mt-2"
             >
-              SMS jo'natish
+              SMS jo&#39;natish
             </button>
           </form>
         )}

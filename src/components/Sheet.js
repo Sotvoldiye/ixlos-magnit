@@ -48,7 +48,7 @@ export default function SheetMobile() {
             <li><button className="font-medium">Aksiyalar</button></li>
             <li><button className="font-medium">Aloqa</button></li>
           </motion.ul>
-          <Link href="/login">Kirish</Link> yoki <Link href="/register">Ro'yxatdan o'tish</Link>
+          <Link href="/login">Kirish</Link> yoki <Link href="/register">Ro&#39;yxatdan o&#39;tish</Link>
         </div>
         )}
       

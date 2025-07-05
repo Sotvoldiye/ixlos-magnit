@@ -52,7 +52,7 @@ export default function Register({ onClose }) {
   return (
 <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
   <div ref={ref} className="bg-white p-6 rounded-md w-[300px]">
-    <h2 className="text-xl font-bold mb-4">Ro'yxatdan o'tish</h2>
+    <h2 className="text-xl font-bold mb-4">Ro&#39;yxatdan o'tish</h2>
 
     {step === 1 && (
       <form onSubmit={handleSendSMS}>
@@ -67,7 +67,7 @@ export default function Register({ onClose }) {
           type="submit"
           className="w-full bg-green-600 text-white py-2 rounded"
         >
-          SMS jo'natish
+          SMS jo&#39;natish
         </button>
       </form>
     )}
@@ -111,7 +111,7 @@ export default function Register({ onClose }) {
           type="submit"
           className="w-full bg-green-600 text-white py-2 rounded"
         >
-          Ro'yxatdan o'tish
+          Ro&#39;yxatdan o&#39;tish
         </button>
       </form>
     )}

@@ -58,7 +58,7 @@ export default function Cards({ item }) {
 
         {/* Rasm */}
         <Link href={`/product/${item.id}`}>
-          <img
+          <Image
             src={item?.thumbnail}
             alt={item?.title}
             width={300}
@@ -77,7 +77,7 @@ export default function Cards({ item }) {
             {item?.title}
           </p>
           <p className="text-[15px] text-gray-900 font-semibold">
-            {item?.price} so'm
+            {item?.price} so&aposm
           </p>
         </Link>
 
