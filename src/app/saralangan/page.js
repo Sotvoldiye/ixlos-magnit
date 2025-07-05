@@ -29,7 +29,7 @@ export default function FavoritePage() {
   if (!hydrated) return <p>Yuklanmoqda...</p>;
 
   if (favorites.length === 0) {
-    return <p>Saqlangan mahsulotlar yo'q</p>;
+    return <p>Saqlangan mahsulotlar yo&#39;q</p>;
   }
   const toggleHelp = (e) => {
     e.preventDefault();

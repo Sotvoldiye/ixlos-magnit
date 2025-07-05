@@ -74,7 +74,7 @@ const SplashScreen = ({ onFinish }) => {
       {showTiles && <div className={style.grid}>{tiles}</div>}
        
        <div className={`text-center my-auto text-[30px] ${style.ixlos}`}> <span className={`${style.ixlosSplashTitle}   text-center`}><span className="text-green-600">Ixlos Magnit</span>  </span>
-       online oziq-ovqat do'koni
+       online oziq-ovqat do&#39;koni
        </div>
     </div>
   );

@@ -52,7 +52,7 @@ export default function Register({ onClose }) {
   return (
 <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
   <div ref={ref} className="bg-white p-6 rounded-md w-[300px]">
-    <h2 className="text-xl font-bold mb-4">Ro&#39;yxatdan o'tish</h2>
+    <h2 className="text-xl font-bold mb-4">Ro&#39;yxatdan o&#39;tish</h2>
 
     {step === 1 && (
       <form onSubmit={handleSendSMS}>
