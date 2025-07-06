@@ -28,7 +28,7 @@ const SplashScreen = ({ onFinish }) => {
         containerRef.current.style.display = "none";
         onFinish?.(); // ? bilan chaqirish — mavjud bo‘lsa
       },
-    });
+    },[onFinish]);
 
     tl.fromTo(
       tiles,
@@ -69,7 +69,7 @@ const SplashScreen = ({ onFinish }) => {
   return (
     <div ref={containerRef} className={style.splash_container}>
       {!showTiles && (
-        <Image  src="/images/logo.jpg" alt="Logo" className={style.full_logo} />
+        <Image width={'100%'} height={'100%'}  src="/images/logo.jpg" alt="Logo" className={style.full_logo} />
       )}
       {showTiles && <div className={style.grid}>{tiles}</div>}
        

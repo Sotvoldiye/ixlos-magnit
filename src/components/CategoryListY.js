@@ -13,7 +13,7 @@ export default function CategoryListY({categories}) {
       <DropdownMenuSeparator />
       {categories.map((cat) => (
         <DropdownMenuItem key={cat}>
-          <Link href={`/category/${cat}`}>{cat.slice(0, 1).toUpperCase() + cat.slice(1,)}</Link>
+          <Link href={`/categorys/${cat}`}>{cat.slice(0, 1).toUpperCase() + cat.slice(1,)}</Link>
         </DropdownMenuItem>
       ))}
     </DropdownMenuContent>

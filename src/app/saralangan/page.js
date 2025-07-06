@@ -1,7 +1,7 @@
 "use client";
 import Cards from '@/components/Cards';
 import Help_Report from '@/components/Help&Report';
-import { removeFavorute, setFavoruteItems } from '@/lib/slice/Slice';
+import { addBags, removeFavorute, removerBags, setFavoruteItems } from '@/lib/slice/Slice';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 export default function FavoritePage() {
   const dispatch = useDispatch();
   const favorites = useSelector((state) => state.favorute.items);
+  const bags = useSelector((state) => state.bags.items);
   const [hydrated, setHydrated] = useState(false);
   const [helpReport, setHelpReport] =useState(FaBullseye)
   useEffect(() => {
@@ -41,7 +42,16 @@ export default function FavoritePage() {
 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 px-4 py-6">
   {favorites.map((item) => {
       const isFavorited = favorites.some((fav) => fav.id === item.id);
+       const isInBags = bags.some((i) => i.id === item.id);
 
+        const toggleBag = (e) => {
+          e.preventDefault();
+          if (isInBags) {
+            dispatch(removerBags({ id: item.id }));
+          } else {
+            dispatch(addBags(item));
+          }
+        };
       const toggleFavorite = (e) => {
         e.preventDefault();
         if (isFavorited) {
@@ -94,15 +104,15 @@ export default function FavoritePage() {
             // ref={helpRef}
             className="w-full absolute bottom-full right-0 bg-white shadow-lg border rounded-md z-30"
           >
-            <Help_Report />
           </div>
         )} */}
 
-        <i
-          // ref={ellipsisRef}
-          // onClick={toggleHelp}
-          className="fa-solid fa-ellipsis-vertical text-[18px] text-gray-700 hover:bg-gray-200 py-[5px] px-[10px] rounded-full cursor-pointer transition"
-        ></i>
+<i
+          className={`fa-solid fa-cart-shopping text-[18px] text-gray-700 hover:bg-gray-200 py-[5px] px-[10px] rounded-full cursor-pointer transition ${
+            isInBags  ? "bg-gray-300 scale-110" : ""
+          }`}
+          onClick={toggleBag}
+        />
       </div>
     </div>
       </div>

@@ -14,16 +14,12 @@ import Help_Report from "./Help&Report";
 export default function Cards({ item }) {
   const dispatch = useDispatch();
   const favorites = useSelector((state) => state.favorute.items);
-  const bags = useSelector((state) => state.bags.items);
+  const bags = useSelector((states) => states.bags.items);
   // Mahsulot favoritda bor-yo‘qligini tekshir
   const itemExistsIn = (list) => {
     return list.some((el) => el.id === item.id);
   };
 
-  const ellipsisRef = useRef(null);
-  const helpRef = useRef(null);
-
-  // Tashqariga click bo‘lsa, modalni yop
 
   const toggleFavorite = (e) => {
     e.preventDefault();
@@ -77,7 +73,7 @@ export default function Cards({ item }) {
             {item?.title}
           </p>
           <p className="text-[15px] text-gray-900 font-semibold">
-            {item?.price} so&aposm
+            {item?.price} so&apos;m
           </p>
         </Link>
 

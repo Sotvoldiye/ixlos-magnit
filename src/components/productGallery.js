@@ -4,8 +4,10 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
-const ProductGallery = ({ images }) => {
+const ProductGallery = ({ images, favorites, toggleFavorite, productId }) => {
   const [selectedImage, setSelectedImage] = useState(images[0]);
+
+  const isFavorited = favorites?.some((item) => item.id === productId);
 
   return (
     <div className="flex flex-col md:flex-row gap-4">
@@ -18,8 +20,10 @@ const ProductGallery = ({ images }) => {
               alt={`Thumbnail ${i}`}
               width={70}
               height={70}
-              className={`border-2 transition-all duration-300 ease-in-out cursor-pointer rounded-md  ${
-                selectedImage === img ? "border-green-500 scale-110" : "border-gray-300"
+              className={`border-2 transition-all duration-300 ease-in-out cursor-pointer rounded-md ${
+                selectedImage === img
+                  ? "border-green-500 scale-110"
+                  : "border-gray-300"
               }`}
             />
           </div>
@@ -27,7 +31,7 @@ const ProductGallery = ({ images }) => {
       </div>
 
       {/* Selected main image with animation */}
-      <div className="flex-1 flex justify-center items-center min-h-[300px]">
+      <div className="flex-1 flex justify-center items-center min-h-[300px] relative">
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedImage}
@@ -35,8 +39,17 @@ const ProductGallery = ({ images }) => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="w-full max-w-[500px] h-auto"
+            className="w-full max-w-[500px] h-auto relative"
           >
+            {/* Like icon */}
+            <i
+  onClick={toggleFavorite}
+  className={`fa-heart text-2xl absolute right-4 top-4 cursor-pointer transition 
+    ${isFavorited ? "fas text-red-600 scale-110" : "far text-gray-400 hover:text-red-400"}`}
+/>
+
+
+
             <Image
               src={selectedImage}
               alt="Selected"

@@ -8,6 +8,7 @@ import Register from "./Register";
 
 export default function TopNavbar() {
   const favoriteCount = useSelector((state) => state.favorute.items.length);
+  const bagCount = useSelector((state) => state.bags.items.length);
   const [login, setLogin] = useState(false);
   const [register, setRegister] = useState(false);
 
@@ -27,13 +28,12 @@ export default function TopNavbar() {
             onClick={() => setRegister(true)}
             className="text-[12px] underline text-blue-600 cursor-pointer inline"
           >
-            Ro&apos;yxatdan o&apos;tish
-          </p>
+            Ro&apos;yxatdan o&apos;tish 
+          </p> 
         </div>
 
-        <div className="flex items-center gap-2 text-[12px]">
+        <div className="flex items-center gap-2 text-[12px] ml-1">
           <Link href="/dailyDeals">Kunlik aksiyalar</Link>
-          <Link href="#">Qo&apos;llab-quvvatlash / Aloqa</Link>
         </div>
       </div>
 
@@ -48,7 +48,13 @@ export default function TopNavbar() {
             </span>
           )}
         </Link>
-        Savat <i className="fas fa-shopping-cart"></i>
+       <Link href="/saqlangan" className="relative">
+       Savat <i className="fa-solid fa-shopping-cart"></i>
+        {bagCount > 0 && (
+           <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+           {bagCount}
+         </span>
+       )}</Link>
       </div>
 
       {login && <Login onClose={() => setLogin(false)} />}

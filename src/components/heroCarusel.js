@@ -56,6 +56,8 @@ export default function HeroCarousel() {
             <Image
               src={slide.image}
               alt={slide.title}
+              width={1200}
+              height={500}
               className={`w-full md:h-[500px] object-cover ${style.caruselImg}`}
             />
             <div className="absolute inset-0 bg-black/40 flex items-center justify-start px-8 md:px-16">

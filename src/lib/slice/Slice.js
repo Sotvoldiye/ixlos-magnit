@@ -89,25 +89,29 @@ const favoruteSlice = createSlice({
 
 /* badge slice */
 const bagSlice = createSlice({
-  name:'bag',
-  initialState:{
-    items:[]
+  name: 'bags',
+  initialState: {
+    items: []
   },
-  reducers:{
-    setBags:(state, action)=>{
-        state.items = action.payload;
+  reducers: {
+    setBags: (state, action) => {
+      state.items = action.payload;
+      localStorage.setItem("bags", JSON.stringify(state.items)); // ✅ darhol saqlansin
     },
-    addBags: (state, action)=>{
-      const exists = state.items.find(item =>item.id === action.payload.id)
-      if (!exists){
-        state.items.push(action.payload)
+    addBags: (state, action) => {
+      const exists = state.items.find(item => item.id === action.payload.id);
+      if (!exists) {
+        state.items.push(action.payload);
+        localStorage.setItem("bags", JSON.stringify(state.items)); // ✅
       }
     },
-    removerBags: (state, action)=> {
-      state.items = state.items.filter(item => item.id !== action.payload.id)
+    removerBags: (state, action) => {
+      state.items = state.items.filter(item => item.id !== action.payload.id);
+      localStorage.setItem("bags", JSON.stringify(state.items)); // ✅
     }
   }
-})
+});
+
 
 /* USER SLICE */
 
@@ -143,7 +147,7 @@ export const {
 export const { addToCart, removeFromCart } = cartSlice.actions;
 export const { login, logout, isAuthReady } = userSlice.actions;
 export const { setFavoruteItems, addFavorute, removeFavorute } = favoruteSlice.actions;
-export const {setBags, addBags, removerBags}= bagSlice
+export const { setBags, addBags, removerBags } = bagSlice.actions;
 /* EXPORT REDUCERS */
 export const counterReducer = counterSlice.reducer;
 export const cartReducer = cartSlice.reducer;
