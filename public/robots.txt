@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://ixlos-magnit.uz
+
+# Sitemaps
+Sitemap: https://ixlos-magnit.uz/sitemap.xml
