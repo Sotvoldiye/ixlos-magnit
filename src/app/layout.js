@@ -29,6 +29,7 @@ export default function RootLayout({ children }) {
   <html>
     <head>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+      <meta name="google-site-verification" content="RzN93L_mMmEbTKPPqm_BOZhV5hmUO_i_j1DQ5whi55M" />
     </head>
      <body className={`${geistSans.variable} ${geistMono.variable}`}>
   <ReduxProvider>
