@@ -3,44 +3,40 @@ import React, { useRef, useState, useEffect } from "react";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
-import PhoneInput from "react-phone-input-2";
 
-export default function Login({ onClose }) {
+export default function Login({ onClose, onOpenRegister }) {
   const ref = useRef();
   useOutsideClick(ref, onClose);
 
-  const [step, setStep] = useState(1);
-  const [phone, setPhone] = useState("");
-  const [code, setCode] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768); // <768px => mobil deb hisoblaymiz
+      setIsMobile(window.innerWidth < 768);
     };
-    handleResize(); // birinchi ishga tushganda
-    window.addEventListener("resize", handleResize); // oyna o‘zgarsa
+    handleResize();
+    window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleSendCode = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!phone || phone.length < 9) {
-      toast.warning("Iltimos, to‘g‘ri telefon raqamini kiriting.");
-      return;
-    }
-    console.log("SMS yuborildi:", phone);
-    setStep(2);
-  };
 
-  const handleVerifyCode = (e) => {
-    e.preventDefault();
-    if (code.length !== 5) {
-      toast.error("5 xonali kodni kiriting.");
+    if (!email || !email.includes("@")) {
+      toast.warning("Iltimos, to‘g‘ri email kiriting.");
       return;
     }
-    console.log("Kiritilgan kod:", code);
-    onClose();
+
+    if (!password || password.length < 6) {
+      toast.warning("Parol kamida 6 ta belgidan iborat bo‘lishi kerak.");
+      return;
+    }
+
+    // Simulyatsiya (bu yerda siz API chaqirishingiz mumkin)
+    toast.success("Kirish muvaffaqiyatli!");
+    onClose(); // modal yopiladi
   };
 
   const variants = {
@@ -56,72 +52,60 @@ export default function Login({ onClose }) {
 
   return (
     <motion.div
-    variants={variants}
-    initial="hidden"
-    animate="visible"
-    exit="exit"
-    className="fixed inset-0 bg-black/20 flex justify-center items-center z-50"
-  >
-    <motion.div
-      ref={ref}
       variants={variants}
-      className="bg-white p-6 rounded-md w-[320px] shadow-lg"
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="fixed inset-0 bg-black/40 flex justify-center items-center z-50"
     >
+      <motion.div
+        ref={ref}
+        variants={variants}
+        className="bg-white p-6 rounded-md w-[320px] max-h-[90vh] overflow-y-auto shadow-lg relative"
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-4 text-gray-500 text-xl hover:text-black"
+        >
+          &times;
+        </button>
+
         <h2 className="text-xl font-bold mb-4 text-center">Kirish</h2>
 
-        {step === 1 && (
-          <form onSubmit={handleSendCode}>
-            <PhoneInput
-              country={"uz"}
-              onlyCountries={["uz"]}
-              masks={{ uz: "(..) ...-..-.." }}
-              value={phone}
-              onChange={setPhone}
-              placeholder="Telefon raqamingiz"
-              inputStyle={{
-                width: "100%",
-                height: "45px",
-                fontSize: "16px",
-                paddingLeft: "50px", // Bu juda muhim: +998 va flag uchun joy
-                borderRadius: "6px",
-                border: "1px solid #ccc",
-              }}
-              containerStyle={{
-                width: "100%",
-              }}
-            />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <input
+            type="email"
+            placeholder="Emailingizni kiriting"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full h-[45px] text-base rounded border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
 
-            <button
-              type="submit"
-              className="w-full bg-green-600 text-white py-2 rounded mt-2"
-            >
-              SMS jo&#39;natish
-            </button>
-          </form>
-        )}
+          <input
+            type="password"
+            placeholder="Parolingizni kiriting"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full h-[45px] text-base rounded border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
 
-        {step === 2 && (
-          <form onSubmit={handleVerifyCode}>
-            <input
-              type="number"
-              placeholder="SMS kod (5 xonali)"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              maxLength={5}
-              className="w-full p-2 border mb-2 rounded text-center tracking-widest text-[20px]"
-            />
-            <button
-              type="submit"
-              className="w-full bg-green-600 text-white py-2 rounded"
-            >
-              Kirish
-            </button>
-          </form>
-        )}
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
+          >
+            Kirish
+          </button>
+        </form>
 
-        <button onClick={onClose} className="text-sm text-gray-500 mt-3 block ">
-          Yopish
-        </button>
+        <div className="text-xs text-center mt-4">
+          Hisobingiz yo‘qmi?{" "}
+          <button
+            onClick={onOpenRegister}
+            className="text-green-600 underline hover:text-green-800"
+          >
+            Ro‘yxatdan o‘tish
+          </button>
+        </div>
       </motion.div>
     </motion.div>
   );

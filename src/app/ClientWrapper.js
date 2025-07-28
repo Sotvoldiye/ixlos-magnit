@@ -5,6 +5,7 @@ import SplashScreen from "@/components/SplashScreen";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { setFavoruteItems } from "@/lib/slice/Slice";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function ClientWrapper({ children }) {
   const [isClientReady, setIsClientReady] = useState(false);
@@ -12,6 +13,11 @@ export default function ClientWrapper({ children }) {
 
   const dispatch = useDispatch();
   const favorites = useSelector((state) => state.favorute.items);
+
+  const pathname = usePathname();
+  const router = useRouter();
+  const hiddenRoutes = ["/contact", "/privacy", "/terms"];
+  const isHiddenRoute = hiddenRoutes.includes(pathname);
 
   // Splash screen nazorati
   useEffect(() => {
@@ -32,7 +38,7 @@ export default function ClientWrapper({ children }) {
     }
   }, []);
 
-  // Faqat bir marta localStorage'dan Reduxga favoritlarni yuklash
+  // Redux localStorage bilan sinxronlashtirish
   useEffect(() => {
     const stored = localStorage.getItem("favorite");
     if (stored) {
@@ -40,16 +46,29 @@ export default function ClientWrapper({ children }) {
     }
   }, [dispatch]);
 
-  // Redux o‘zgarishida localStorage'ga yozish
   useEffect(() => {
     localStorage.setItem("favorite", JSON.stringify(favorites));
   }, [favorites]);
 
   if (!isClientReady && !showSplash) return null;
 
-  return showSplash ? (
-    <SplashScreen />
-  ) : (
-    <LayoutWrapper>{children}</LayoutWrapper>
-  );
+  // Splashdan keyin, sahifaga qarab shartli chiqish
+  if (showSplash) return <SplashScreen />;
+
+  if (isHiddenRoute) {
+    return (
+      <div className="p-4">
+        <button
+          onClick={() => router.back()}
+          className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 transition"
+        >
+          ← Orqaga
+        </button>
+        <div className="mt-4">{children}</div>
+      </div>
+    );
+  }
+
+  // Oddiy sahifalar uchun LayoutWrapper bilan render
+  return <LayoutWrapper>{children}</LayoutWrapper>;
 }

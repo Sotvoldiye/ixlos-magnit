@@ -38,7 +38,7 @@ export default function Category() {
         <h4 className="text-xl font-semibold capitalize">{categoryName}</h4>
         <Link
           href={`/categorys/${encodeURIComponent(categoryName)}`}
-          className="text-sm text-blue-600 hover:underline"
+          className="text-sm text-green-600 hover:underline"
         >
           Batafsil ko&#39;rish →
         </Link>

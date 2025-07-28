@@ -4,10 +4,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
-const ProductGallery = ({ images, favorites, toggleFavorite, productId }) => {
+const ProductGallery = ({ images, toggleFavorite, isFavorited }) => {
   const [selectedImage, setSelectedImage] = useState(images[0]);
-
-  const isFavorited = favorites?.some((item) => item.id === productId);
 
   return (
     <div className="flex flex-col md:flex-row gap-4">
@@ -43,12 +41,13 @@ const ProductGallery = ({ images, favorites, toggleFavorite, productId }) => {
           >
             {/* Like icon */}
             <i
-  onClick={toggleFavorite}
-  className={`fa-heart text-2xl absolute right-4 top-4 cursor-pointer transition 
-    ${isFavorited ? "fas text-red-600 scale-110" : "far text-gray-400 hover:text-red-400"}`}
-/>
-
-
+              className={`text-xl absolute right-4 top-4 z-10 cursor-pointer transition-all duration-200 ${
+                isFavorited
+                  ? "fas fa-heart text-red-500 scale-110"
+                  : "far fa-heart text-gray-400 hover:text-red-400"
+              }`}
+              onClick={toggleFavorite}
+            ></i>
 
             <Image
               src={selectedImage}

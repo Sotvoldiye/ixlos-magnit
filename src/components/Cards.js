@@ -1,48 +1,21 @@
 "use client";
-import {
-  addBags,
-  addFavorute,
-  removeFavorute,
-  removerBags,
-} from "@/lib/slice/Slice";
+import useProductCard from "@/hooks/ProductCard";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Help_Report from "./Help&Report";
+import React from "react";
 
 export default function Cards({ item }) {
-  const dispatch = useDispatch();
-  const favorites = useSelector((state) => state.favorute.items);
-  const bags = useSelector((states) => states.bags.items);
-  // Mahsulot favoritda bor-yo‘qligini tekshir
-  const itemExistsIn = (list) => {
-    return list.some((el) => el.id === item.id);
-  };
-
-
-  const toggleFavorite = (e) => {
-    e.preventDefault();
-    if (itemExistsIn(favorites)) {
-      dispatch(removeFavorute({ id: item.id }));
-    } else {
-      dispatch(addFavorute(item));
-    }
-  };
-
-  const toggleBags = (e) => {
-    e.preventDefault();
-    if (itemExistsIn(bags)) {
-      dispatch(removerBags({ id: item.id }));
-    } else {
-      dispatch(addBags(item));
-    }
-  };
+  const {
+    favorites,
+    bags,
+    itemExistsIn,
+    toggleFavorite,
+    toggleBags,
+  } = useProductCard(item);
 
   return (
     <div className="flex p-o flex-col relative w-full rounded-lg transition">
       <div className="relative w-full">
-        {/* Favorite icon */}
         <i
           className={`text-xl absolute right-2 z-10 cursor-pointer ${
             itemExistsIn(favorites)
@@ -52,7 +25,6 @@ export default function Cards({ item }) {
           onClick={toggleFavorite}
         ></i>
 
-        {/* Rasm */}
         <Link href={`/product/${item.id}`}>
           <Image
             src={item?.thumbnail}
@@ -64,9 +36,6 @@ export default function Cards({ item }) {
         </Link>
       </div>
 
-      {/* Mahsulot nomi va narxi */}
-
-      {/* Ellipsis va modal */}
       <div className="flex justify-between items-center">
         <Link href={`/product/${item.id}`}>
           <p className="text-sm font-medium text-gray-800 line-clamp-1">

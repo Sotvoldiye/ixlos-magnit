@@ -69,7 +69,14 @@ const SplashScreen = ({ onFinish }) => {
   return (
     <div ref={containerRef} className={style.splash_container}>
       {!showTiles && (
-        <Image width={'100%'} height={'100%'}  src="/images/logo.jpg" alt="Logo" className={style.full_logo} />
+        <div className={style.imageWrapper}>
+  <Image
+    src="/images/logo.jpg"
+    alt="Logo"
+    fill
+    className={style.full_logo}
+  />
+</div>
       )}
       {showTiles && <div className={style.grid}>{tiles}</div>}
        
