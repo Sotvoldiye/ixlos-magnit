@@ -27,7 +27,7 @@ export default function TopNavbar() {
             onClick={() => setModalType("register")}
             className="text-[12px] underline text-green-600 cursor-pointer inline"
           >
-            Ro'yxatdan o'tish
+            Ro&#39;yxatdan o&#39;tish
           </p>
         </div>
 

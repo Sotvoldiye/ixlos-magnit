@@ -15,7 +15,7 @@ export default function CategoriesList({ categories }) {
 
   if (isLoading) return <p>Yuklanmoqda...</p>;
   if (error) return <p>Xatolik: {error.message}</p>;
-  if (!data?.products || !Array.isArray(data.products)) return <p>Ma'lumot yo'q</p>;
+  if (!data?.products || !Array.isArray(data.products)) return <p>Ma&#39;lumot yo&#39;q</p>;
 
   return (
     <div className="flex flex-wrap gap-4 px-2 pb-3 text-gray-700">
