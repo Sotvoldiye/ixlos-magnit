@@ -6,10 +6,10 @@ export default function ShowContactDialog({showContactInfoDialog, setShowContact
     <Dialog open={showContactInfoDialog} onOpenChange={setShowContactInfoDialog}>
     <DialogContent>
         <DialogHeader>
-          <DialogTitle>Buyurtmani bekor qilish uchun bog‘laning</DialogTitle>
+          <DialogTitle>Buyurtmani bekor qilish uchun bog&#39;laning</DialogTitle>
         </DialogHeader>
         <p className="text-sm text-gray-700">
-        Bergan buyurtmangizni bekor qilsh uchun biz bilan bog'laning
+        Bergan buyurtmangizni bekor qilsh uchun biz bilan bog&#39;laning
         </p>
         <p className="text-lg font-semibold mt-2">+998 (90) 305-77-83</p>
         <p className="text-sm text-gray-600 mt-1">Buyurtmangiz hozircha bekor qilnmaydi</p>

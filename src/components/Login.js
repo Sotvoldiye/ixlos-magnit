@@ -25,12 +25,12 @@ export default function Login({ onClose, onOpenRegister }) {
     e.preventDefault();
 
     if (!email || !email.includes("@")) {
-      toast.warning("Iltimos, to‘g‘ri email kiriting.");
+      toast.warning("Iltimos, to&#39;g&#39;ri email kiriting.");
       return;
     }
 
     if (!password || password.length < 6) {
-      toast.warning("Parol kamida 6 ta belgidan iborat bo‘lishi kerak.");
+      toast.warning("Parol kamida 6 ta belgidan iborat bo&#39;lishi kerak.");
       return;
     }
 
@@ -98,12 +98,12 @@ export default function Login({ onClose, onOpenRegister }) {
         </form>
 
         <div className="text-xs text-center mt-4">
-          Hisobingiz yo‘qmi?{" "}
+          Hisobingiz yo&#39;qmi?{" "}
           <button
             onClick={onOpenRegister}
             className="text-green-600 underline hover:text-green-800"
           >
-            Ro‘yxatdan o‘tish
+            Ro&#39;yxatdan o&#39;tish
           </button>
         </div>
       </motion.div>

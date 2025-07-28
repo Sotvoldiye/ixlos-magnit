@@ -88,7 +88,7 @@ export default function SheetMobile() {
                     onClick={() => setOpen(false)}
                     className="text-green-600 hover:underline"
                   >
-                    Ro‘yxatdan o‘tish
+                    Ro&#39;yxatdan o&#39;tish
                   </Link>
                 </div>
               </motion.div>

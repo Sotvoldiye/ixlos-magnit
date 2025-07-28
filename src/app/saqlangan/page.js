@@ -54,7 +54,7 @@ export default function BagsPage() {
   if (!hydrated) return <p className="text-center py-6">Yuklanmoqda...</p>;
 
   if (bags.length === 0) {
-    return <p className="text-center py-6">Saqlangan mahsulotlar yo‘q</p>;
+    return <p className="text-center py-6">Saqlangan mahsulotlar yo&#39;q</p>;
   }
   // if lar o'xiri
 
@@ -165,7 +165,7 @@ const updateQuantity = (id, delta, stock) => {
                     {item?.title}
                   </p>
                   <p className="text-[15px] text-gray-900 font-semibold">
-                    {item?.price} so‘m
+                    {item?.price} so&#39;m
                   </p>
                 </Link>
 

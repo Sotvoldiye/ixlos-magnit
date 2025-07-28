@@ -35,7 +35,7 @@ export default function ContactSection() {
     <div className="flex flex-col md:flex-row items-start justify-between gap-8 px-4 py-8 max-w-6xl mx-auto">
       {/* Form qismi */}
       <div className="w-full md:w-1/2 border rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Biz bilan bog‘lanish</h2>
+        <h2 className="text-xl font-semibold mb-4">Biz bilan bog&#39;lanish</h2>
         <form ref={form} onSubmit={sendEmail} className="space-y-4">
           <input
             type="text"

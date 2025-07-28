@@ -50,20 +50,20 @@ export default function OpenModal({setOrderedItems,updateQuantity, quantities, s
             <Image src={item.thumbnail} alt={item.title} width={60} height={60} className="rounded" />
             <div>
               <p className="font-medium">{item.title}</p>
-              <p className="text-sm text-gray-600">{item.price} so‘m</p>
+              <p className="text-sm text-gray-600">{item.price} so&#39;m</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={() => updateQuantity(item.id, -1, item.stock)} className="border px-2">-</button>
             <span>{quantities[item.id] || 1}</span>
             <button onClick={() => updateQuantity(item.id, 1, item.stock)} className="border px-2">+</button>
-            <button onClick={() => removeFromModalOnly(item.id)} className="text-red-500 text-sm">O‘chirish</button>
+            <button onClick={() => removeFromModalOnly(item.id)} className="text-red-500 text-sm">O&#39;chirish</button>
           </div>
         </div>
       ))}
     </div>
     <div className="mt-6 text-right font-semibold">
-      Umumiy summa: {totalPrice} so‘m
+      Umumiy summa: {totalPrice} so&#39;m
     </div>
     <button className="bg-green-600 p-2 rounded-md text-white" onClick={finalizeOrder}>Buyurtma berish</button>
   </DialogContent>

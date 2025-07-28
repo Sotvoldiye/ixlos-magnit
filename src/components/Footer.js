@@ -10,7 +10,7 @@ export default function Footer() {
         <div>
           <h4 className="text-lg font-semibold mb-3">Ixlos Magnit</h4>
           <p className="text-sm text-gray-400">
-            Sizning ishonchli oziq-ovqat do‘koningiz
+            Sizning ishonchli oziq-ovqat do&#39;koningiz
           </p>
         </div>
 
@@ -20,7 +20,7 @@ export default function Footer() {
           <ul className="space-y-2 text-sm text-gray-300">
             <li>
               <Link href="/contact" className="hover:text-white transition">
-                Biz bilan bog‘lanish
+                Biz bilan bog&#39;lanish
               </Link>
             </li>
             <li>

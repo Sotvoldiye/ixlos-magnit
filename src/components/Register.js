@@ -18,12 +18,12 @@ export default function Register({ onClose, onOpenLogin }) {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      toast.warning("To'g'ri email manzilini kiriting");
+      toast.warning("To&#39;g&#39;ri email manzilini kiriting");
       return;
     }
 
     if (password.length < 6) {
-      toast.warning("Parol kamida 6 ta belgidan iborat bo‘lishi kerak");
+      toast.warning("Parol kamida 6 ta belgidan iborat bo&#39;lishi kerak");
       return;
     }
 
@@ -33,7 +33,7 @@ export default function Register({ onClose, onOpenLogin }) {
     }
 
     // Bu yerda API chaqiruvi bajariladi
-    toast.success("Muvaffaqiyatli ro'yxatdan o'tdingiz");
+    toast.success("Muvaffaqiyatli ro&#39;yxatdan o&#39;tdingiz");
 
     onClose(); // Modalni yopish
   };
@@ -71,7 +71,7 @@ export default function Register({ onClose, onOpenLogin }) {
         </button>
 
         <h2 className="text-xl font-bold mb-4 text-center">
-          Ro'yxatdan o'tish
+          Ro&#39;yxatdan o&#39;tish
         </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
@@ -103,7 +103,7 @@ export default function Register({ onClose, onOpenLogin }) {
             type="submit"
             className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
           >
-            Ro'yxatdan o'tish
+            Ro&#39;yxatdan o&#39;tish
           </button>
         </form>
 

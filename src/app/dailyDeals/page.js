@@ -24,7 +24,7 @@ export default function DailyDeals() {
   const top10ByDiscountPercentage = getTop10DailyDeals(data.products);
 
   if (!top10ByDiscountPercentage.length)
-    return <p>Eng so‘nggi kun uchun mahsulot topilmadi</p>;
+    return <p>Eng so&#39;nggi kun uchun mahsulot topilmadi</p>;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-6 gap-6 p-6">
@@ -66,10 +66,10 @@ export default function DailyDeals() {
               product.price -
               (product.price * product.discountPercentage) / 100
             ).toFixed(2)}{" "}
-            so‘m
+            so&#39;m
           </div>
           <div className="text-sm line-through text-gray-500">
-            {product.price.toFixed(2)} so‘m
+            {product.price.toFixed(2)} so&#39;m
           </div>
         </Link>
       </div>
