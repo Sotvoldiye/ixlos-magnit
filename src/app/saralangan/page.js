@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useProductCard } from "@/hooks/useProductCard"; // hook umumiy state boshqaruvi uchun
 import { getProductCardState } from "@/hooks/getProductCardState";
+import useProductCard from "@/hooks/ProductCard";
 
 export default function SaralanganPage() {
   const {
