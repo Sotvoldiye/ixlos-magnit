@@ -5,76 +5,72 @@ import { getProductCardState } from "@/hooks/getProductCardState";
 import useProductCard from "@/hooks/ProductCard";
 
 export default function SaralanganPage() {
-  const {
-    favorites,
-    bags,
-    toggleFavorited,
-    toggleBaged,
-  } = useProductCard(); // ✅ Hook faqat komponent darajasida ishlatilgan
+  const { favorites, bags, toggleFavorited, toggleBaged } = useProductCard();
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      {bags.map((item) => {
-        const {
-          isFavorited,
-          isInBags,
-          toggleFavorited: handleToggleFavorited,
-          toggleBaged: handleToggleBaged,
-        } = getProductCardState(item, favorites, bags, toggleFavorited, toggleBaged);
+    <div className="container mx-auto px-4 py-6">
+      <h2 className="text-2xl font-bold mb-6">Saralangan Mahsulotlar</h2>
 
-        return (
-          <div
-            key={item.id}
-            className="bg-white shadow-md rounded-xl overflow-hidden border hover:shadow-lg transition px-2 py-2"
-          >
-            <div className="flex flex-col relative w-full rounded-lg transition">
-              <div className="relative w-full">
-                {/* Favorite icon */}
-                <i
-                  className={`text-xl absolute right-2 z-10 cursor-pointer 
-                    ${
-                      isFavorited
-                        ? "fas fa-heart text-red-500 scale-110"
-                        : "far fa-heart text-gray-700 hover:text-red-400"
-                    }`}
-                  onClick={handleToggleFavorited}
-                ></i>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {bags.map((item) => {
+          const {
+            isFavorited,
+            isInBags,
+            toggleFavorited: handleToggleFavorited,
+            toggleBaged: handleToggleBaged,
+          } = getProductCardState(item, favorites, bags, toggleFavorited, toggleBaged);
 
-                {/* Rasm */}
-                <Link href={`/product/${item.id}`}>
-                  <Image
-                    src={item?.thumbnail}
-                    alt={item?.title}
-                    width={300}
-                    height={300}
-                    className="w-full h-[200px] object-cover rounded-md"
-                  />
-                </Link>
-              </div>
+          return (
+            <div
+              key={item.id}
+              className="relative bg-white rounded-2xl shadow-lg overflow-hidden transition transform hover:scale-[1.02]"
+            >
+              {/* Favorite icon */}
+              <i
+                className={`text-xl absolute top-3 right-3 z-10 cursor-pointer transition ${
+                  isFavorited
+                    ? "fas fa-heart text-red-500 scale-110"
+                    : "far fa-heart text-gray-500 hover:text-red-400"
+                }`}
+                onClick={handleToggleFavorited}
+              ></i>
 
-              {/* Mahsulot nomi va narxi */}
+              {/* Mahsulot rasmi */}
               <Link href={`/product/${item.id}`}>
-                <p className="text-sm font-medium text-gray-800 line-clamp-1">
-                  {item?.title}
-                </p>
-                <p className="text-[15px] text-gray-900 font-semibold">
-                  {item?.price} so&#39;m
-                </p>
+                <Image
+                  src={item?.thumbnail}
+                  alt={item?.title}
+                  width={400}
+                  height={300}
+                  className="w-full h-56 object-cover"
+                />
               </Link>
 
-              {/* Savatcha */}
-              <div className="relative self-end">
-                <i
-                  className={`fa-solid fa-cart-shopping text-[18px] text-gray-700 hover:bg-gray-200 py-[5px] px-[10px] rounded-full cursor-pointer transition ${
-                    isInBags ? "bg-gray-300 scale-110" : ""
-                  }`}
-                  onClick={handleToggleBaged}
-                />
+              {/* Mahsulot ma'lumotlari */}
+              <div className="p-4">
+                <Link href={`/product/${item.id}`}>
+                  <h3 className="text-lg font-semibold text-gray-800 line-clamp-1">{item?.title}</h3>
+                </Link>
+                <p className="text-base text-gray-900 font-bold mt-1">
+                  {item?.price} so&#39;m
+                </p>
+
+                {/* Savatcha tugmasi */}
+                <div className="mt-4 flex justify-end">
+                  <i
+                    className={`fa-solid fa-cart-shopping text-[20px] transition-all cursor-pointer px-3 py-2 rounded-full ${
+                      isInBags
+                        ? "bg-green-100 text-green-700 scale-110"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
+                    onClick={handleToggleBaged}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
