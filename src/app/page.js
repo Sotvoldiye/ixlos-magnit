@@ -9,7 +9,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      <main className={`bg-[#d1cdcd]`}>
+      <main>
         <HeroCarousel />
         <Category />
       </main>

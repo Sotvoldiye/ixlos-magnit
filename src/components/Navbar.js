@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import TopNavbar from "./TopNavbar";
@@ -7,32 +7,38 @@ import { useGetAllProductsQuery } from "@/lib/api/productApi";
 import { useParams, useRouter } from "next/navigation";
 import CategoriesList from "./CategoriesListX";
 import CategoryListY from "./CategoryListY";
-import style from "./topNav.module.css"
+import style from "./topNav.module.css";
 import TopNavbarScleton from "./TopNavbarScleton";
 import Image from "next/image";
 export default function Navbar() {
   const { data, isLoading, error } = useGetAllProductsQuery();
 
-
-  if (isLoading) return <div><TopNavbarScleton/></div>;
+  if (isLoading)
+    return (
+      <div>
+        <TopNavbarScleton />
+      </div>
+    );
   if (error) return <p>Error: {error.message}</p>;
 
   const categories = [...new Set(data.products.map((p) => p.category))];
 
   return (
-    <header className={`pt-2 ${style.nav} bgray-200`}>
+    <header className={`pt-2 ${style.nav}`}>
       <TopNavbar />
 
       {/* Main Navbar */}
       <div className="md:px-8 flex items-center py-6 w-full mt-2 mb-2 border-y border-gray-300 gap-4">
         <Link href="/">
-          {/* <h1 className="text-[26px] font-semibold whitespace-nowrap"> */}
-          <Image width={70} height={50} src="/images/siteLogo.jpg" alt="lofo"/>
+          {/* <h1 className="text-[25px] font-semibold whitespace-nowrap"> */}
+          <Image width={90} height={60} src="/images/logo234.jpg" alt="lofo" />
           {/* </h1> */}
         </Link>
 
         <form className="flex ` flex-grow items-center gap-4">
-          <div className={`flex items-center flex-grow border border-black rounded-3xl px-4 py-2 gap-3 ${style.searchingInput}`}>
+          <div
+            className={`flex items-center flex-grow border border-black rounded-3xl px-4 py-2 gap-3 ${style.searchingInput}`}
+          >
             <i className="fa-solid fa-magnifying-glass text-gray-500"></i>
             <input
               className="flex-grow outline-none border-none text-sm"
@@ -41,7 +47,7 @@ export default function Navbar() {
             />
 
             <div className="border-l border-black pl-3 ml-3">
-            <CategoryListY categories={categories}/>
+              <CategoryListY categories={categories} />
             </div>
           </div>
 
@@ -50,9 +56,8 @@ export default function Navbar() {
           </button>
         </form>
       </div>
-      
-       <CategoriesList categories={categories}/>            
 
+      <CategoriesList categories={categories} />
     </header>
   );
 }
