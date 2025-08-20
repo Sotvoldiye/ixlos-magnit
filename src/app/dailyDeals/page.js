@@ -65,7 +65,7 @@ export default function DailyDeals() {
             {(
               product.price -
               (product.price * product.discountPercentage) / 100
-            ).toFixed(2)}{" "}
+            ).toFixed(3)}{" "}
             so&#39;m
           </div>
           <div className="text-sm line-through text-gray-500">

@@ -5,13 +5,20 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ProductGallery = ({ images, toggleFavorite, isFavorited }) => {
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  // backenddan kelgan rasmni to‘liq URLga o‘girish
+  const baseURL = "http://127.0.0.1:5000"; 
+
+  const formattedImages = images.map(
+    (img) => `${baseURL}${img.url}` // masalan: "/static/uploads/abc.jpg" → "http://127.0.0.1:5000/static/uploads/abc.jpg"
+  );
+
+  const [selectedImage, setSelectedImage] = useState(formattedImages[0]);
 
   return (
     <div className="flex flex-col md:flex-row gap-4">
       {/* Thumbnail images */}
       <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible">
-        {images.map((img, i) => (
+        {formattedImages.map((img, i) => (
           <div key={i} onClick={() => setSelectedImage(img)}>
             <Image
               src={img}

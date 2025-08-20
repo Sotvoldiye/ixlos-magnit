@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import Image from "next/image";
 
 export default function OpenModal({setOrderedItems,updateQuantity, quantities, setSelectedItems, selectedItems, open,setOpen,  }) {
+  const BASE_URL = "http://127.0.0.1:5000";
 
   // ikkinchi useEffect
   //birinichi modal ni useEffecti
@@ -31,12 +32,19 @@ export default function OpenModal({setOrderedItems,updateQuantity, quantities, s
   );
   // birinchi modalga kerak bo'lgan funksiya
   const finalizeOrder = () => {
-    toast.success("Buyurtmangiz qabul qilindi");
+   if(totalPrice >= 100000){
+ toast.success("Buyurtmangiz qabul qilindi");
     setOrderedItems((prev) => [
       ...prev,
       ...selectedItems.map((item) => ({ ...item, ordered: true })),
     ]);
     setOpen(false);
+   }else{
+    toast.error("Haridingiz 100 000 ga teng yoki undan oshsa buyurtma bera olasiz")
+    setOpen(false)
+    return
+   }
+
   };
   return   <Dialog open={open} onOpenChange={setOpen}>
   <DialogContent>
@@ -44,12 +52,17 @@ export default function OpenModal({setOrderedItems,updateQuantity, quantities, s
       <DialogTitle>Sotib olinayotgan mahsulotlar</DialogTitle>
     </DialogHeader>
     <div className="space-y-4">
-      {selectedItems.map((item) => (
+      {selectedItems.map((item) =>{ 
+ const imageUrl =
+    item?.images?.length > 0
+      ? BASE_URL + item.images[0].url
+      : "/no-image.png";
+      return(
         <div key={item.id} className="flex justify-between items-center border p-2 rounded">
           <div className="flex items-center gap-3">
-            <Image src={item.thumbnail} alt={item.title} width={60} height={60} className="rounded" />
+            <Image src={imageUrl} alt={item.name} width={60} height={60} className="rounded" />
             <div>
-              <p className="font-medium">{item.title}</p>
+              <p className="font-medium">{item.name}</p>
               <p className="text-sm text-gray-600">{item.price} so&#39;m</p>
             </div>
           </div>
@@ -60,7 +73,7 @@ export default function OpenModal({setOrderedItems,updateQuantity, quantities, s
             <button onClick={() => removeFromModalOnly(item.id)} className="text-red-500 text-sm">O&#39;chirish</button>
           </div>
         </div>
-      ))}
+      )})}
     </div>
     <div className="mt-6 text-right font-semibold">
       Umumiy summa: {totalPrice} so&#39;m

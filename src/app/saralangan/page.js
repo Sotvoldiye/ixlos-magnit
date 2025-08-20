@@ -1,76 +1,100 @@
 "use client";
-import Image from "next/image";
-import Link from "next/link";
-import { getProductCardState } from "@/hooks/getProductCardState";
+
 import useProductCard from "@/hooks/ProductCard";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setBags, removerBags, addBags, removeFavorute } from "@/lib/slice/Slice";
+import Link from "next/link";
+import Image from "next/image";
 
-export default function SaralanganPage() {
-  const { favorites, bags, toggleFavorited, toggleBaged } = useProductCard();
-
+const SaralanganPage = () => {
+  // Redux'dan favorute olish
+  const [orderedItems, setOrderedItems] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return JSON.parse(localStorage.getItem("orderedItems") || "[]");
+    }
+    return [];
+  }); 
+    const dispatch = useDispatch();
+  const favorutes = useSelector((state) => state.favorute.items || []);
+  const { itemExistsIn, toggleFavorited, toggleBaged } = useProductCard();
+  const favorites = useSelector((state) => state.bags.items || []);
+  const BASE_URL = "http://127.0.0.1:5000";
+  
+  const handleCardRemove = (item) => {
+    if (orderedItems.some((ord) => ord.id === item.id)) {
+      setShowContactInfoDialog(true);
+    } else {
+      dispatch(removeFavorute({ id: item.id }));
+    }
+     
+  
+  };
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h2 className="text-2xl font-bold mb-6">Saralangan Mahsulotlar</h2>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">Saralangan mahsulotlar</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {bags.map((item) => {
-          const {
-            isFavorited,
-            isInBags,
-            toggleFavorited: handleToggleFavorited,
-            toggleBaged: handleToggleBaged,
-          } = getProductCardState(item, favorites, bags, toggleFavorited, toggleBaged);
+      {favorutes.length === 0 ? (
+        <p className="text-gray-500">Hozircha saralangan mahsulot yo‘q.</p>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {favorutes.map((item, index) => {
+          const isInFavorites = itemExistsIn(favorites, item);
+          const isOrdered = orderedItems.some((ord) => ord.id === item.id);
+  const imageUrl =
+    item?.images?.length > 0
+      ? BASE_URL + item.images[0].url
+      : "/no-image.png";
 
-          return (
+          return(
             <div
-              key={item.id}
-              className="relative bg-white rounded-2xl shadow-lg overflow-hidden transition transform hover:scale-[1.02]"
+              key={item?.id || index} // ✅ Har doim unikal bo‘lishini ta’minladik
+              className="relative border rounded-lg shadow hover:shadow-lg transition p-2"
             >
-              {/* Favorite icon */}
-              <i
-                className={`text-xl absolute top-3 right-3 z-10 cursor-pointer transition ${
-                  isFavorited
-                    ? "fas fa-heart text-red-500 scale-110"
-                    : "far fa-heart text-gray-500 hover:text-red-400"
-                }`}
-                onClick={handleToggleFavorited}
-              ></i>
-
-              {/* Mahsulot rasmi */}
-              <Link href={`/product/${item.id}`}>
-                <Image
-                  src={item?.thumbnail}
-                  alt={item?.title}
-                  width={400}
-                  height={300}
-                  className="w-full h-56 object-cover"
-                />
-              </Link>
-
-              {/* Mahsulot ma'lumotlari */}
-              <div className="p-4">
-                <Link href={`/product/${item.id}`}>
-                  <h3 className="text-lg font-semibold text-gray-800 line-clamp-1">{item?.title}</h3>
-                </Link>
-                <p className="text-base text-gray-900 font-bold mt-1">
-                  {item?.price} so&#39;m
-                </p>
-
-                {/* Savatcha tugmasi */}
-                <div className="mt-4 flex justify-end">
-                  <i
-                    className={`fa-solid fa-cart-shopping text-[20px] transition-all cursor-pointer px-3 py-2 rounded-full ${
-                      isInBags
-                        ? "bg-green-100 text-green-700 scale-110"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            <div className="flex flex-col relative w-full rounded-lg transition">
+                <div className="relative w-full">
+                <div className="flex items-center">
+                <i
+                    className={`text-md absolute right-2 top-2 z-10 cursor-pointer ${
+                      removeFavorute
+                        ? "fas fa-cart-shopping text-red-500 scale-110"
+                        : "fas fa-cart-shopping text-gray-700 hover:text-red-400"
                     }`}
-                    onClick={handleToggleBaged}
-                  />
+                    onClick={() => toggleBaged(item)}
+                  ></i>
+                   
+                   <i className={`text-md absolute right-2 top-8 z-10 cursor-pointer ${
+                      isInFavorites
+                        ? "fas fa-trash text-gray-500 scale-110"
+                        : "fas fa-trash text-gray-700"
+                    }`}  onClick={() => handleCardRemove(item)}></i>
                 </div>
-              </div>
+                  <Link href={`/product/${item.id}`}>
+                    <Image
+                      src={imageUrl}
+                      alt={item?.name}
+                      width={300}
+                      height={300}
+                      className="w-full h-[200px] object-cover rounded-md"
+                    />
+                  </Link>
+                </div>
+
+                <Link href={`/product/${item.id}`}>
+                  <p className="text-sm font-medium text-gray-800 line-clamp-1 mt-2">
+                    {item?.name}
+                  </p>
+                  <p className="text-[15px] text-gray-900 font-semibold">
+                    {item?.price} so&#39;m
+                  </p>
+                </Link>
+                </div>
             </div>
-          );
-        })}
-      </div>
+          )})}
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default SaralanganPage;

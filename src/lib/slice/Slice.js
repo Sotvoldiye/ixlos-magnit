@@ -113,33 +113,35 @@ const bagSlice = createSlice({
 
 /* USER SLICE */
 
-const userInitialState = {
-  user: null,
-  authReady: false,
-};
+
+const initialUser = typeof window !== "undefined"
+  ? JSON.parse(sessionStorage.getItem("user")) || null
+  : null;
 
 const userSlice = createSlice({
   name: "user",
-  initialState: userInitialState,
+  initialState: {
+    user: initialUser,
+  },
   reducers: {
-    login: (state, { payload }) => {
-      state.user = payload;
+    login: (state, action) => {
+      state.user = action.payload;
+      sessionStorage.setItem("user", JSON.stringify(action.payload));
     },
     logout: (state) => {
       state.user = null;
-    },
-    setAuthReady: (state) => {
-      state.authReady = true;
+      sessionStorage.removeItem("user");
     },
   },
 });
+
 
 /* EXPORT ACTIONS */
 export const { increment, decrement, setStock, resetCounter } =
   counterSlice.actions;
 
 export const { addToCart, removeFromCart } = cartSlice.actions;
-export const { login, logout, isAuthReady } = userSlice.actions;
+export const { login, logout, setAuthReady } = userSlice.actions;
 export const { setFavoruteItems, addFavorute, removeFavorute } =
   favoruteSlice.actions;
 export const { setBags, addBags, removerBags } = bagSlice.actions;

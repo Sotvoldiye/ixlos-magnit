@@ -1,7 +1,7 @@
 'use client';
 
 import HeroCarousel from "@/components/heroCarusel";
-import Category from "@/app/categorys/page";
+import Category from "@/app/category/page";
 import SplashScreen from "@/components/SplashScreen";
 import { useEffect, useState } from "react";
 

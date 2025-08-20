@@ -1,17 +1,26 @@
 "use client";
+
 import useProductCard from "@/hooks/ProductCard";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
-export default function Cards({ item }) {
+export default function Cards({ product }) {
+  console.log("Product in Cards:", product);
   const {
     favorites,
     bags,
     itemExistsIn,
     toggleFavorite,
     toggleBags,
-  } = useProductCard(item);
+  } = useProductCard(product);
+  // API bazaviy URL
+  const BASE_URL = "http://127.0.0.1:5000";
+
+  // rasm URL ni yasash
+  const imageUrl =
+    product?.images?.length > 0
+      ? BASE_URL + product.images[0].url
+      : "/no-image.png";
 
   return (
     <div className="flex p-o flex-col relative w-full rounded-lg transition">
@@ -25,10 +34,10 @@ export default function Cards({ item }) {
           onClick={toggleFavorite}
         ></i>
 
-        <Link href={`/product/${item.id}`}>
+        <Link href={`/product/${product.id}`}>
           <Image
-            src={item?.thumbnail}
-            alt={item?.title}
+            src={imageUrl}
+            alt={product?.name ||"Maxsulot"}
             width={300}
             height={300}
             className="w-full h-[200px] object-cover rounded-md"
@@ -37,12 +46,12 @@ export default function Cards({ item }) {
       </div>
 
       <div className="flex justify-between items-center">
-        <Link href={`/product/${item.id}`}>
+        <Link href={`/product/${product.id}`}>
           <p className="text-sm font-medium text-gray-800 line-clamp-1">
-            {item?.title}
+            {product?.name}
           </p>
           <p className="text-[15px] text-gray-900 font-semibold">
-            {item?.price} so&apos;m
+            {product?.price} so&apos;m
           </p>
         </Link>
 

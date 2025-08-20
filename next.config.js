@@ -3,6 +3,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+        unoptimized: true, // developmentda tezroq ishlash uchun
     remotePatterns: [
       {
         protocol: 'https',

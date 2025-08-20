@@ -12,20 +12,25 @@ export default function useProductCard(item) {
   const favorites = useSelector((state) => state.favorute.items);
   const bags = useSelector((state) => state.bags.items);
 
-  const itemExistsIn = (list) => {
-    return list.some((el) => el.id === item.id);
-  };
-  const itemExistsIns = (list, itemOrId) => {
-    if (!Array.isArray(list)) return false;
-  
-    // Agar itemOrId obyekt bo‘lsa => id ni olib tekshir
-    if (typeof itemOrId === "object" && itemOrId !== null) {
-      return list.some((el) => el && el.id === itemOrId.id);
-    }
-  
-    // Aks holda — bu id deb qabul qilinadi
+const itemExistsIn = (list) => {
+  if (!item || !item.id) return false; // ✅ item mavjudligini tekshir
+  return Array.isArray(list) && list.some((el) => el && el.id === item.id);
+};
+
+const itemExistsIns = (list, itemOrId) => {
+  if (!Array.isArray(list)) return false;
+
+  if (typeof itemOrId === "object" && itemOrId !== null && itemOrId.id) {
+    return list.some((el) => el && el.id === itemOrId.id);
+  }
+
+  if (typeof itemOrId === "number" || typeof itemOrId === "string") {
     return list.some((el) => el && el.id === itemOrId);
-  };
+  }
+
+  return false;
+};
+
 
   const toggleFavorite = (e) => {
     e.preventDefault();
