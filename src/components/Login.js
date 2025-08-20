@@ -128,7 +128,7 @@ export default function Login({ onClose, onOpenRegister }) {
             onClick={onOpenRegister}
             className="text-green-600 underline hover:text-green-800"
           >
-            Ro&apos;yxatdan o'tish
+            Ro&apos;yxatdan o&apos;tish
           </button>
         </div>
       </motion.div>
