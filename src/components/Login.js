@@ -123,12 +123,12 @@ export default function Login({ onClose, onOpenRegister }) {
         </form>
 
         <div className="text-xs text-center mt-4">
-          Hisobingiz yo'qmi?{" "}
+          Hisobingiz yo&apos;qmi?{" "}
           <button
             onClick={onOpenRegister}
             className="text-green-600 underline hover:text-green-800"
           >
-            Ro'yxatdan o'tish
+            Ro&apos;yxatdan o'tish
           </button>
         </div>
       </motion.div>

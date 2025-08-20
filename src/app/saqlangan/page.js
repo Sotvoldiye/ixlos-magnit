@@ -55,7 +55,7 @@ export default function BagsPage() {
   }, [orderedItems]);
 
   if (!hydrated) return <p className="text-center py-6">Yuklanmoqda...</p>;
-  if (bags.length === 0) return <p className="text-center py-6">Saqlangan mahsulotlar yo'q</p>;
+  if (bags.length === 0) return <p className="text-center py-6">Saqlangan mahsulotlar yo&apos;q</p>;
 
   const updateQuantity = (id, delta, stock) => {
     setQuantities((prev) => {

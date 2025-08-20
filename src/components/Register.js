@@ -84,7 +84,7 @@ console.log(name)
           &times;
         </button>
 
-        <h2 className="text-xl font-bold mb-4 text-center">Ro'yxatdan o'tish</h2>
+        <h2 className="text-xl font-bold mb-4 text-center">Ro&apos;yxatdan o&apos;tish</h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input type="text" placeholder="Ismingizni kiriting" value={name} onChange={(e) => setName(e.target.value)} className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" />
