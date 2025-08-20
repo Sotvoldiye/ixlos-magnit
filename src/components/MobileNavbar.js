@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import TopNavbar from "./TopNavbar";
 import Link from "next/link";
-import Image from "next/image"; // ✅ Next.js image
+import Image from "next/image"; 
 import { useGetAllCategoriesQuery, useGetAllProductsQuery } from "@/lib/api/productApi";
 import CategoriesList from "./CategoriesListX";
 import SheetMobile from "./Sheet";
@@ -12,30 +12,24 @@ import style from "./topNav.module.css";
 import { useSelector } from "react-redux";
 
 export default function MobileNavbar() {
+  // 🔹 API hooklar har doim yuqorida
   const { data: productsData, isLoading: productsLoading, error: productsError } = useGetAllProductsQuery();
   const { data: categoriesData, isLoading: categoriesLoading, error: categoriesError } = useGetAllCategoriesQuery();
 
   const [login, setLogin] = useState(false);
 
-  const categorie = categoriesData || [];
-  if (!Array.isArray(categorie)) return null;
-
+  // 🔹 Redux hooklar ham yuqorida
   const user = useSelector((state) => state.user.user);
-  const favoriteCount = useSelector((state) => state.favorite?.items?.length || 0); // ✅ to‘g‘rilandi
-  const bagCount = useSelector((state) => state.bag?.items?.length || 0); // ✅ to‘g‘rilandi
+  const favoriteCount = useSelector((state) => state.favorite?.items?.length || 0);
+  const bagCount = useSelector((state) => state.bag?.items?.length || 0);
 
-  // avatar rang
+  // 🔹 Avatar rang
   const [avatarColor, setAvatarColor] = useState("#ccc");
 
   const getRandomColor = () => {
     const colors = [
-      "#f87171",
-      "#60a5fa",
-      "#34d399",
-      "#fbbf24",
-      "#a78bfa",
-      "#f472b6",
-      "#f97316",
+      "#f87171", "#60a5fa", "#34d399", "#fbbf24",
+      "#a78bfa", "#f472b6", "#f97316",
     ];
     return colors[Math.floor(Math.random() * colors.length)];
   };
@@ -51,12 +45,20 @@ export default function MobileNavbar() {
     }
   }, [user]);
 
-  if (productsLoading || categoriesLoading) return <div className={style.mobileNav}></div>;
-  if (productsError) return <p>Error: {productsError.message}</p>; // ✅ to‘g‘rilandi
-  if (categoriesError) return <p>Error: {categoriesError.message}</p>;
+  // 🔹 Loading/Error holatlarini faqat return da ishlatamiz
+  if (productsLoading || categoriesLoading) {
+    return <div className={style.mobileNav}></div>;
+  }
+  if (productsError) {
+    return <p>Error: {productsError.message}</p>;
+  }
+  if (categoriesError) {
+    return <p>Error: {categoriesError.message}</p>;
+  }
 
+  // 🔹 Ma’lumotlar transformatsiyasi
+  const categorie = Array.isArray(categoriesData) ? categoriesData : [];
   const categories = [...new Set(productsData?.products?.map((p) => p.category) || [])];
-
   const firstLetter = user?.user?.charAt(0).toUpperCase() || "";
 
   return (
@@ -65,7 +67,7 @@ export default function MobileNavbar() {
       <div className="md:px-8 flex flex-col items-start w-[calc(100% -2rem)] mt-2 mx-2 mb-2 gap-4">
         <div className="flex items-center justify-between w-[calc(100%-1rem)] mx-2">
           <Link href="/">
-            <Image src="/images/logo234.jpg" alt="logo" width={90} height={40} /> 
+            <Image src="/images/logo234.jpg" alt="logo" width={90} height={40} />
           </Link>
           <div className="flex gap-3 items-center">
             {user ? (
@@ -81,7 +83,7 @@ export default function MobileNavbar() {
                 className="fa-solid fa-user cursor-pointer"
               ></i>
             )}
-            
+
             {/* Favorite */}
             <Link href="/saralangan" className="relative text-gray-700 hover:text-black">
               <i className="fa-solid fa-heart"></i>
