@@ -150,7 +150,7 @@ export default function BagsPage() {
                 <img src={imageUrl} alt={item?.name} className="w-full h-[200px] object-cover rounded-md" />
 
                 <p className="text-sm font-medium text-gray-800 line-clamp-1 mt-2">{item?.title}</p>
-                <p className="text-[15px] text-gray-900 font-semibold">{item?.price} so'm</p>
+                <p className="text-[15px] text-gray-900 font-semibold">{item?.price} so&apos;m</p>
 
                 <div className="flex justify-between items-center mt-2">
                   <div className="flex gap-2 items-center">
