@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useGetAllProductsQuery } from "@/lib/api/productApi";
+import { useGetAllCategoriesQuery, useGetAllProductsQuery } from "@/lib/api/productApi";
 import ProductGallery from "@/components/productGallery";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +20,7 @@ import BuyButton from "@/hooks/Product";
 export default function ProductPage() {
   const dispatch = useDispatch();
   const { data, isLoading } = useGetAllProductsQuery();
+  const {data:dataCategory, isLoading:isLoadingCategory } = useGetAllCategoriesQuery()
   const [showLoginModal, setShowLoginModal] = useState(false);
   const params = useParams();
   const [product, setProduct] = useState(null);
@@ -86,13 +87,19 @@ export default function ProductPage() {
       toast.error(`Afsus haridingiz 100 000 so'mga teng yoki undan o'shmasa saytdan narsa xarid qila olmaysiz`)
     }
   };
+     const productCategory = dataCategory?.find(
+  (cat) => cat.id === product.category_id
+);
 
   return (
     <div className="px-6">
-      <Breadcrumb
-        category={product.category?.split(" / ") || []}
-        title={product.title}
-      />
+
+<Breadcrumb
+  category={productCategory?.name?.split(" / ") || []}
+  category_id={productCategory?.id}
+  title={product.name}
+/>
+
 
       <div className="py-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">

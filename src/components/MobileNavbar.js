@@ -67,7 +67,7 @@ export default function MobileNavbar() {
       <div className="md:px-8 flex flex-col items-start w-[calc(100% -2rem)] mt-2 mx-2 mb-2 gap-4">
         <div className="flex items-center justify-between w-[calc(100%-1rem)] mx-2">
           <Link href="/">
-            <Image src="/images/logo234.jpg" alt="logo" width={90} height={40} />
+            <Image src="/images/ixlosmagnit.svg" alt="logo" width={140} height={40} />
           </Link>
           <div className="flex gap-3 items-center">
             {user ? (
@@ -85,24 +85,24 @@ export default function MobileNavbar() {
             )}
 
             {/* Favorite */}
-            <Link href="/saralangan" className="relative text-gray-700 hover:text-black">
-              <i className="fa-solid fa-heart"></i>
-              {favoriteCount > 0 && (
-                <span className="absolute -top-2 -right-3 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
-                  {favoriteCount}
-                </span>
-              )}
-            </Link>
+         <Link href="/saralangan" className="relative text-gray-700 hover:text-black">
+          <i className="fa-solid fa-heart"></i>
+          {favoriteCount > 0 && (
+            <span className="absolute -top-2 -right-3 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+              {favoriteCount}
+            </span>
+          )}
+        </Link>
 
-            {/* Bag */}
-            <Link href="/saqlangan" className="relative text-gray-700 hover:text-black">
-              <i className="fa-solid fa-shopping-cart"></i>
-              {bagCount > 0 && (
-                <span className="absolute -top-2 -right-3 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
-                  {bagCount}
-                </span>
-              )}
-            </Link>
+        <Link href="/saqlangan" className="relative text-gray-700 hover:text-black">
+          <i className="fa-solid fa-shopping-cart"></i>
+          {bagCount > 0 && (
+            <span className="absolute -top-2 -right-3 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+              {bagCount}
+            </span>
+          )}
+        </Link>
+
 
             <SheetMobile categorie={categorie} />
           </div>

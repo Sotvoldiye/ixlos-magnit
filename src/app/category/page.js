@@ -17,7 +17,7 @@ export default function CategoryWithProducts() {
   const { data: products, isLoading: prodLoading } = useGetAllProductsQuery();
 
   if (isLoading || prodLoading) {
-    return <p className="text-gray-500">Yuklanmoqda...</p>;
+    return <CategorySkleton/>
   }
 
   if (error) {
@@ -27,8 +27,7 @@ export default function CategoryWithProducts() {
   if (!categories || categories.length === 0) {
     return <p className="text-gray-500">Kategoriya mavjud emas.</p>;
   }
-console.log(categories)
-console.log(products)
+
   return (
     <div className="space-y-8">
       {categories.map((cat) => {
@@ -73,15 +72,7 @@ console.log(products)
     className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-white bg-opacity-80 rounded-full shadow-md hover:bg-opacity-100 transition"
   />
 </Carousel>
-            {/* {catProducts.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {catProducts.map((product) => (
-                  <Cards key={product.id} product={product} />
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-500">Bu kategoriyada mahsulot yo‘q.</p>
-            )} */}
+           
           </div>
         );
       })}

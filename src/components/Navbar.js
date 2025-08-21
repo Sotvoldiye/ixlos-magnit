@@ -33,7 +33,7 @@ export default function Navbar() {
       <TopNavbar />
       <div className="md:px-8 flex items-center py-6 w-full mt-2 mb-2 border-y border-gray-300 gap-4">
         <Link href="/">
-          <Image width={90} height={60} src="/images/logo234.jpg" alt="logo" />
+          <Image width={120} height={60} src="/images/ixlosmagnit.svg" alt="logo" />
         </Link>
 
         {/* Qidiruv formasi */}

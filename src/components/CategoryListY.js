@@ -25,7 +25,7 @@ export default function CategoryListY({ categories }) {
         <DropdownMenuSeparator />
         {categories.map((cat) => (
           <DropdownMenuItem key={cat.id}>
-            <Link href={`/categorys/${encodeURIComponent(cat.id)}`}>
+            <Link href={`/category/${encodeURIComponent(cat.id)}`}>
               {cat.name}
             </Link>
           </DropdownMenuItem>
