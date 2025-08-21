@@ -1,9 +1,8 @@
-// next.config.js
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
   images: {
-        unoptimized: true, // developmentda tezroq ishlash uchun
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
