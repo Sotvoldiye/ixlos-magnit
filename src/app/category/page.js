@@ -30,10 +30,10 @@ export default function CategoryWithProducts() {
 
   return (
     <div className="space-y-8">
-      {categories.map((cat) => {
+      {categories.slice(0,10).map((cat) => {
         // kategoriya bo‘yicha productlarni olish
         const catProducts = (products || []).filter(
-          (p) => p?.category_id === cat?.id // har doim string qilib solishtiramiz
+          (p) => p?.category_id === cat?.id// har doim string qilib solishtiramiz
         );
 
         return (

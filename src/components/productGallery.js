@@ -44,24 +44,25 @@ const ProductGallery = ({ images, toggleFavorite, isFavorited }) => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="w-full max-w-[500px] h-auto relative"
+            className="w-full max-w-[400px] h-auto relative"
           >
             {/* Like icon */}
-            <i
-              className={`text-xl absolute right-4 top-4 z-10 cursor-pointer transition-all duration-200 ${
-                isFavorited
-                  ? "fas fa-heart text-red-500 scale-110"
-                  : "far fa-heart text-gray-400 hover:text-red-400"
-              }`}
-              onClick={toggleFavorite}
-            ></i>
+   <i
+  className={`text-xl absolute left-[90%] top-4 z-10 cursor-pointer transition-all duration-200 ${
+    isFavorited
+      ? "fas fa-heart text-red-500 scale-110"
+      : "far fa-heart text-gray-400 hover:text-red-400"
+  }`}
+  onClick={toggleFavorite}
+/>
+
 
             <Image
               src={selectedImage}
               alt="Selected"
-              width={500}
-              height={500}
-              className="rounded-md object-cover w-full h-auto"
+              width={400}
+              height={100}
+              className="rounded-md max-h-100 max-w-600 bg-gray-300 object-contain"
             />
           </motion.div>
         </AnimatePresence>

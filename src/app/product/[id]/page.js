@@ -36,15 +36,18 @@ export default function ProductPage() {
     setQuantities((prev) => {
       const current = prev[id] || 1;
       const updated = current + delta;
-      if (updated < 1 || updated > stock) {
-        if (!toast.isActive(`qty-limit-${id}`)) {
-          toast.error(
-            `Mahsulot miqdori 1 dan kam va ${stock} dan ortiq bo‘lishi mumkin emas`,
-            { toastId: `qty-limit-${id}` }
-          );
-        }
-        return prev;
-      }
+    if (updated < 1 || updated > stock) {
+  setTimeout(() => {
+    if (!toast.isActive(`qty-limit-${id}`)) {
+      toast.error(
+        `Mahsulot miqdori 1 dan kam va ${stock} dan ortiq bo‘lishi mumkin emas`,
+        { toastId: `qty-limit-${id}` }
+      );
+    }
+  }, 0);
+  return prev;
+}
+
       return { ...prev, [id]: updated };
     });
   };
