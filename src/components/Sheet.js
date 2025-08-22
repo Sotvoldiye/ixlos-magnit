@@ -1,6 +1,12 @@
 "use client";
 
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
@@ -29,10 +35,10 @@ export default function SheetMobile({ categorie = [] }) {
 
       <SheetContent
         side="right"
-        className="w-full max-w-xs overflow-y-auto px-3 py-6 bg-white"
+        className="w-full max-w-xs overflow-y-auto px-3  bg-white"
       >
         <SheetHeader>
-          <SheetTitle className=" items-start p-1 text-md">
+          <SheetTitle className=" items-start  text-md">
             {step === "main" ? (
               "Menyu"
             ) : (
@@ -46,7 +52,7 @@ export default function SheetMobile({ categorie = [] }) {
           </SheetTitle>
         </SheetHeader>
 
-        <div className="mt-5 relative">
+        <div className="relative">
           <AnimatePresence mode="wait" initial={false}>
             {step === "main" && (
               <motion.div
@@ -56,17 +62,26 @@ export default function SheetMobile({ categorie = [] }) {
                 exit={{ x: 50, opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <ul className="space-y-4">
-                  <li>
-                    <button
-                      onClick={() => setStep("categories")}
-                      className="font-medium text-base hover:text-green-600 transition"
-                    >
-                      Kategoriyalar
-                    </button>
-                  </li>
-                
-                </ul>
+                <motion.ul
+                  key="categories"
+                  initial={{ x: 50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -50, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-3 mt-3"
+                >
+                  {categorie.map((cat) => (
+                    <li key={cat.id}>
+                      <Link
+                        href={`/categorys/${encodeURIComponent(cat.id)}`}
+                        onClick={() => setOpen(false)}
+                        className="block font-medium hover:text-green-600 transition"
+                      >
+                        {cat.name}
+                      </Link>
+                    </li>
+                  ))}
+                </motion.ul>
 
                 <div className="mt-6 text-sm">
                   {user ? (
@@ -97,29 +112,6 @@ export default function SheetMobile({ categorie = [] }) {
                   )}
                 </div>
               </motion.div>
-            )}
-
-            {step === "categories" && (
-              <motion.ul
-                key="categories"
-                initial={{ x: 50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -50, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-3 mt-3"
-              >
-                {categorie.map((cat) => (
-                  <li key={cat.id}>
-                    <Link
-                      href={`/categorys/${encodeURIComponent(cat.id)}`}
-                      onClick={() => setOpen(false)}
-                      className="block font-medium hover:text-green-600 transition"
-                    >
-                      {cat.name}
-                    </Link>
-                  </li>
-                ))}
-              </motion.ul>
             )}
           </AnimatePresence>
         </div>

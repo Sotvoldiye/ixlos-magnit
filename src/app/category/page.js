@@ -42,14 +42,14 @@ export default function CategoryWithProducts() {
         return (
           <div key={cat.id}>
             {/* Category nomi */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between sm:mb-4 lg:mb-4 mb-1 mt-3 md:mb-4">
               <div className=" flex items-center gap-2">
                 {" "}
-                <div className="w-1 rounded-2xl h-5 bg-green-500"></div> <h2 className="text-xl font-bold"> {cat.name}</h2>
+                <div className="w-1 rounded-2xl h-5 bg-green-500"></div> <h2 className="md:text-xl sm:text-xl lg:text-xl font-bold text-[15px]"> {cat.name}</h2>
               </div>
               <Link
                 href={`/category/${cat.id}`}
-                className="text-blue-500 hover:underline"
+                className="text-blue-500 hover:underline md:text-[18px] sm:text-[18px] lg:text-[18px] text-[15px] "
               >
                 Barchasini ko‘rish →
               </Link>

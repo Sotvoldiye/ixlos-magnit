@@ -26,14 +26,14 @@ export default function Navbar() {
   };
 
   return (
-   <header className="relative pt-2 bg-[url('/images/headerimg.jpg')] bg-cover h-35">
+   <header className="relative md:inline sm:inline lg:inline hidden pt-2 bg-[url('/images/headerimg.jpg')] bg-cover h-35">
   {/* Header fonidagi rasm saqlanadi */}
   <div className="absolute bottom-0 w-full md:px-8 flex items-center py-2 border-gray-300 gap-4">
     <Link href="/">
       <Image width={120} height={60} src="/images/ixlosmagnit.svg" alt="logo" />
     </Link>
 
-    <form onSubmit={handleSearch} className="flex flex-grow items-center gap-4">
+    <form onSubmit={handleSearch} className="flex flex-grow items-center gap-4 ">
       <div className="flex items-center flex-grow border border-black rounded-sm pl-4 gap-3 bg-white">
         <i className="fa-solid fa-magnifying-glass text-gray-500"></i>
         <input
@@ -51,6 +51,8 @@ export default function Navbar() {
         </button>
       </div>
     </form>
+    <button>
+<i className="fa-solid fa-magnifying-glass"></i>    </button>
 
     <TopNavbar />
   </div>

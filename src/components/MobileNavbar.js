@@ -10,11 +10,14 @@ import SheetMobile from "./Sheet";
 import Login from "./Login";
 import style from "./topNav.module.css";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 export default function MobileNavbar() {
   // 🔹 API hooklar har doim yuqorida
   const { data: productsData, isLoading: productsLoading, error: productsError } = useGetAllProductsQuery();
   const { data: categoriesData, isLoading: categoriesLoading, error: categoriesError } = useGetAllCategoriesQuery();
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [login, setLogin] = useState(false);
 
@@ -61,8 +64,16 @@ export default function MobileNavbar() {
   const categories = [...new Set(productsData?.products?.map((p) => p.category) || [])];
   const firstLetter = user?.user?.charAt(0).toUpperCase() || "";
 
+
+  
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    // 🔥 Search natijasiga boshqa sahifaga o'tkazadi
+    router.push(`/searchResult?query=${encodeURIComponent(searchQuery.trim())}`);
+  };
   return (
-    <header className={`pt-2 ${style.mobileNav}`}>
+    <header className={`pt-2 ${style.mobileNav} bg-[url('/images/headerimg.jpg')] bg-cover h-35`}>
       <TopNavbar />
       <div className="md:px-8 flex flex-col items-start w-[calc(100% -2rem)] mt-2 mx-2 mb-2 gap-4">
         <div className="flex items-center justify-between w-[calc(100%-1rem)] mx-2">
@@ -109,23 +120,28 @@ export default function MobileNavbar() {
         </div>
 
         {/* Search input */}
-        <form className="flex w-full items-center gap-4">
-          <div
-            className={`flex w-full border border-black rounded-3xl px-4 py-2 gap-3 ${style.searchingInput}`}
-          >
-            <i className="fa-solid fa-magnifying-glass text-gray-500"></i>
-            <input
-              className="flex-grow outline-none border-none text-sm"
-              type="text"
-              placeholder="Maxsulot qidirish"
-            />
-          </div>
+        <form onSubmit={handleSearch} className="flex w-full items-center gap-4">
+         <div className="flex items-center flex-grow border border-black rounded-sm pl-4 gap-3 bg-white">
+        <i className="fa-solid fa-magnifying-glass text-gray-500"></i>
+        <input
+          className="flex-grow outline-none border-none text-sm"
+          type="text"
+          placeholder="Maxsulot qidirish"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button
+          type="submit"
+          className="px-4 py-2 rounded-r-sm bg-green-500 text-white hover:bg-green-600 transition"
+        >
+          Qidirish
+        </button>
+      </div>
         </form>
 
         {login && <Login onClose={() => setLogin(false)} />}
       </div>
 
-      <CategoriesList categories={categorie} />
     </header>
   );
 }

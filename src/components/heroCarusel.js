@@ -3,29 +3,7 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import style from "./topNav.module.css";
-// const slides = [
-//   {
-//     id: 1,
-//     image: "/images/slide1.jpg",
-//     title: "Ixlos magnit tez orada ishga tushamiz",
-//     subtitle: "Get the right parts or your money back.",
-//     cta: "Shop now",
-//   },
-//   {
-//     id: 2,
-//     image: "/images/slide2.jpg",
-//     title: "Discover performance parts",
-//     subtitle: "Boost your vehicle's power with ease.",
-//     cta: "Explore now",
-//   },
-//   {
-//     id: 3,
-//     image: "/images/slide3.jpg",
-//     title: "Discover performance parts",
-//     subtitle: "Boost your vehicle's power with ease.",
-//     cta: "Explore now",
-//   },
-// ];
+
 import { useGetAllAdvertisementsQuery } from "@/lib/api/productApi";
 
 export default function HeroCarousel() {

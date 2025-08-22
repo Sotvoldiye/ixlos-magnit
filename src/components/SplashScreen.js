@@ -81,7 +81,7 @@ const SplashScreen = ({ onFinish }) => {
       {showTiles && <div className={style.grid}>{tiles}</div>}
        
        <div className={`text-center my-auto text-[30px] ${style.ixlos}`}> 
-      <Image src="/images/ixlosmagnit.svg" alt=""/>
+      <Image src="/images/ixlosmagnit.svg" width={10} alt=""/>
        </div>
     </div>
   );

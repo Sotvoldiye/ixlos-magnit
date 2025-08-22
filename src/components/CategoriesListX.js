@@ -11,7 +11,7 @@ export default function CategoryList({ categories }) {
   const [showModal, setShowModal] = useState(false);
   return (
     <>
-      <div className="flex gap-26 px-2 py-3  border-gray-300 overflow-hidden">
+      <div className="flex md:gap-26  sm:gap-3 px-2 sm:px-1 py-3  border-gray-300 overflow-hidden">
         <Link
           href={``}
           className="text-sm md:text-base font-medium hover:underline hover:text-green-600 transition-all flex-shrink-0"
