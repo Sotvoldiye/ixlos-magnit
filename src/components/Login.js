@@ -2,7 +2,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import { toast } from "react-toastify";
-import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { login } from "@/lib/slice/Slice"; // Redux action
 import Cookies from "js-cookie";
@@ -76,25 +75,7 @@ export default function Login({ onClose, onOpenRegister }) {
   };
 
   return (
-    <motion.div
-      variants={variants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      className="fixed inset-0 bg-black/40 flex justify-center items-center z-50"
-    >
-      <motion.div
-        ref={ref}
-        variants={variants}
-        className="bg-white p-6 rounded-md w-[320px] max-h-[90vh] overflow-y-auto shadow-lg relative"
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-4 text-gray-500 text-xl hover:text-black"
-        >
-          &times;
-        </button>
-
+<div>
         <h2 className="text-xl font-bold mb-4 text-center">Kirish</h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
@@ -122,16 +103,6 @@ export default function Login({ onClose, onOpenRegister }) {
           </button>
         </form>
 
-        <div className="text-xs text-center mt-4">
-          Hisobingiz yo&apos;qmi?{" "}
-          <button
-            onClick={onOpenRegister}
-            className="text-green-600 underline hover:text-green-800"
-          >
-            Ro&apos;yxatdan o&apos;tish
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
+     </div>
   );
 }

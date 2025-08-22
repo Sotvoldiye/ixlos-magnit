@@ -11,6 +11,7 @@ import Register from "@/components/Register";
 import OpenModal from "@/components/openModal";
 import SelectedProduct from "@/components/SelectedProduct";
 import ShowContactDialog from "@/components/ShowContactDialog";
+import Image from "next/image";
 
 export default function BagsPage() {
   const dispatch = useDispatch();
@@ -147,7 +148,7 @@ export default function BagsPage() {
                   ></i>
                 </div>
 
-                <img src={imageUrl} alt={item?.name} className="w-full h-[200px] object-cover rounded-md" />
+                <Image src={imageUrl} alt={item?.name} className="w-full h-[200px] object-cover rounded-md" />
 
                 <div className="flex justify-between items-center mt-2">
                   <p className="text-sm font-medium text-gray-800 line-clamp-1 mt-2">{item?.name}</p>

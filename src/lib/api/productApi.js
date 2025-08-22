@@ -60,10 +60,10 @@ export const productApi = createApi({
     }),
 
     registerUser: builder.mutation({
-      query: ({ username, email, password, number }) => ({
+      query: ({ username, email, password, phone }) => ({
         url: "/register",
         method: "POST",
-        body: { username, email, password, number },
+        body: { username, email, password, phone },
       }),
     }),
     getMe: builder.query({

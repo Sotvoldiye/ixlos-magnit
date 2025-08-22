@@ -53,7 +53,7 @@ export default function HeroCarousel() {
 
   return (
     <div
-      className={`relative w-full h-[400px] overflow-hidden ${style.carusel}`}
+      className={`relative w-full h-[300px] overflow-hidden ${style.carusel}`}
     >
       <div
         className="flex transition-transform duration-700 ease-in-out"
@@ -61,12 +61,12 @@ export default function HeroCarousel() {
       >
         {ads.map((ads) => (
           <div key={ads.id} className="w-full flex-shrink-0 relative">
-            <img
+            <Image
               src={ads.image_url || "/no-image.png"}
               alt={ads.title || "Reklama rasm"}
               width={1200}
-              height={500}
-              className={`w-full md:h-[500px] object-contain ${style.caruselImg}`}
+              height={300}
+              className={`w-full md:h-[300px] object-contain ${style.caruselImg}`}
             />
 
             <div className="absolute inset-0 bg-black/40 flex items-center justify-start px-8 md:px-16">

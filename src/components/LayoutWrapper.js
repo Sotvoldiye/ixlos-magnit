@@ -9,10 +9,10 @@ export default function LayoutWrapper({ children }) {
   const hideLayout = pathname.startsWith("/login") || pathname.startsWith("/register");
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {!hideLayout && <Navbar />}
+    <div className="flex flex-col min-h-screen   ">
+ {!hideLayout && <Navbar  />}
       {!hideLayout && <MobileNavbar />}
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow ">{children}</main>
       {!hideLayout && <Footer />}
     </div>
   );

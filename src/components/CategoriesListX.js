@@ -1,22 +1,64 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function CategoryList({ categories }) {
-  if (!categories?.length) return null;
-
+  const containerRef = useRef(null);
+  const [visibleCats, setVisibleCats] = useState([]);
+  const [hiddenCats, setHiddenCats] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   return (
-    <div className="flex gap-6 px-2 py-3 border-b border-gray-300 overflow-x-auto">
-      {categories.map((cat) => (
+    <>
+      <div className="flex gap-26 px-2 py-3  border-gray-300 overflow-hidden">
         <Link
-          key={cat.id}
-          href={`/category/${cat.id}`} // yoki slug bo'lsa `/category/${cat.slug}`
+          href={``}
           className="text-sm md:text-base font-medium hover:underline hover:text-green-600 transition-all flex-shrink-0"
         >
-          {cat.name.charAt(0).toUpperCase() + cat.name.slice(1)}
+          Aksiyalar
         </Link>
-      ))}
-    </div>
+        <Link
+          href={``}
+          className="text-sm md:text-base font-medium hover:underline hover:text-green-600 transition-all flex-shrink-0"
+        >
+          Yangiliklar
+        </Link>
+        <Link
+          href={``}
+          className="text-sm md:text-base font-medium hover:underline hover:text-green-600 transition-all flex-shrink-0"
+        >
+          Xizmatlar
+        </Link>
+  
+                <Link
+          href={``}
+          className="text-sm md:text-base font-medium hover:underline hover:text-green-600 transition-all flex-shrink-0"
+        >
+          Miqdori Cheklangan Tovarlar
+        </Link>
+              <Link
+          href={``}
+          className="text-sm md:text-base font-medium hover:underline hover:text-green-600 transition-all flex-shrink-0"
+        >
+          Faberlik Biznes
+        </Link>
+                <Link
+          href={``}
+          className="text-sm md:text-base font-medium hover:underline hover:text-green-600 transition-all flex-shrink-0"
+        >
+          Faberlik Aksiyalar
+        </Link>
+        {/* {categories.slice(0, 6).map((cat) => (
+          <Link
+            key={cat.id}
+            href={`/catigories/${cat.id}`}
+            className="text-sm md:text-base font-medium hover:underline hover:text-green-600 transition-all flex-shrink-0"
+          >
+            {cat.name}
+          </Link>
+        ))} */}
+      </div>
+    </>
   );
 }

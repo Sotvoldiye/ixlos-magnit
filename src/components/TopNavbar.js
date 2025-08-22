@@ -1,20 +1,19 @@
 "use client";
 
 import { useDispatch, useSelector } from "react-redux";
-import Login from "./Login";
-import Register from "./Register";
 import { useState, useEffect } from "react";
 import style from "./topNav.module.css";
 import Link from "next/link";
 import { logout } from "@/lib/slice/Slice";
+import { useRouter } from "next/navigation";
 
 export default function TopNavbar() {
   const user = useSelector((state) => state.user.user);
   const favoriteCount = useSelector((state) => state.favorute.items.length);
   const bagCount = useSelector((state) => state.bags.items.length);
-  const [modalType, setModalType] = useState(null);
   const [avatarColor, setAvatarColor] = useState("#ccc"); // default rang
   const dispatch = useDispatch();
+  const router = useRouter();
 
   // Random rang yaratish funksiyasi
   const getRandomColor = () => {
@@ -42,11 +41,11 @@ export default function TopNavbar() {
 
   // Foydalanuvchi ismining birinchi harfini olish
   const firstLetter = user?.user?.charAt(0).toUpperCase() || "";
-console.log(user)
+
   return (
-    <div className={`md:px-8 flex justify-between items-center ${style.nav} py-3`}>
+    <div className={`md:px-8 flex items-center gap-6 ${style.nav}`}>
       {/* Avatar va User */}
-      <div className="flex items-center gap-3">
+      <div>
         {user ? (
           <div className="flex items-center gap-3">
             {/* Avatar */}
@@ -59,28 +58,19 @@ console.log(user)
             <span className="font-medium">{user.user}</span>
           </div>
         ) : (
-          <div className="flex items-center gap-2 text-[14px]">
-            <p
-              onClick={() => setModalType("login")}
-              className="underline text-green-600 cursor-pointer"
-            >
-              Kirish
-            </p>
-            <span> yoki </span>
-            <p
-              onClick={() => setModalType("register")}
-              className="underline text-green-600 cursor-pointer"
-            >
-              Ro’yxatdan o’tish
-            </p>
+          <div
+            className=" text-[14px] flex items-center gap-2 cursor-pointer"
+            onClick={() => router.push("/Auth")}  // 🔥 sahifaga o‘tadi
+          >
+            <i className="fas fa-user fa-xl"/> <p>Kirish</p>
           </div>
         )}
       </div>
 
       {/* Saralangan va Saqlangan */}
-      <div className="flex gap-4 items-center text-[14px]">
+      <div className="flex gap-6 items-center text-[14px]">
         <Link href="/saralangan" className="relative text-gray-700 hover:text-black">
-          <i className="fa-solid fa-heart"></i>
+          <i className="fa-solid fa-heart fa-xl"></i>
           {favoriteCount > 0 && (
             <span className="absolute -top-2 -right-3 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
               {favoriteCount}
@@ -88,13 +78,16 @@ console.log(user)
           )}
         </Link>
 
-        <Link href="/saqlangan" className="relative text-gray-700 hover:text-black">
-          <i className="fa-solid fa-shopping-cart"></i>
-          {bagCount > 0 && (
-            <span className="absolute -top-2 -right-3 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
-              {bagCount}
-            </span>
-          )}
+        <Link href="/saqlangan" className="flex items-center gap-1 text-gray-700 hover:text-black">
+          <div className="relative">
+            <i className="fa-solid fa-shopping-cart fa-xl"></i>
+            {bagCount > 0 && (
+              <span className="absolute -top-2 -right-3 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+                {bagCount}
+              </span>
+            )}
+          </div>
+          <p className="inline">Savat</p>
         </Link>
 
         {/* Logout */}
@@ -106,14 +99,6 @@ console.log(user)
           ></i>
         )}
       </div>
-
-      {/* Modallar */}
-      {modalType === "login" && (
-        <Login onClose={() => setModalType(null)} onOpenRegister={() => setModalType("register")} />
-      )}
-      {modalType === "register" && (
-        <Register onClose={() => setModalType(null)} onOpenLogin={() => setModalType("login")} />
-      )}
     </div>
   );
 }

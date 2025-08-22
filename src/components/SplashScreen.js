@@ -71,7 +71,7 @@ const SplashScreen = ({ onFinish }) => {
       {!showTiles && (
         <div className={style.imageWrapper}>
   <Image
-    src="/images/logo.jpg"
+    src="/images/grocery.jpg"
     alt="Logo"
     fill
     className={style.full_logo}
@@ -80,8 +80,8 @@ const SplashScreen = ({ onFinish }) => {
       )}
       {showTiles && <div className={style.grid}>{tiles}</div>}
        
-       <div className={`text-center my-auto text-[30px] ${style.ixlos}`}> <span className={`${style.ixlosSplashTitle}   text-center`}><span className="text-green-600">Ixlos Magnit</span>  </span>
-       online oziq-ovqat do&#39;koni
+       <div className={`text-center my-auto text-[30px] ${style.ixlos}`}> 
+      <Image src="/images/ixlosmagnit.svg" alt=""/>
        </div>
     </div>
   );

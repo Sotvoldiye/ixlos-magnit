@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-10 mt-10">
+    <footer className="bg-gray-900 text-white py-10">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Brend va Tavsif */}
         <div>
@@ -51,7 +51,7 @@ export default function Footer() {
             ></i>
             Telegram kanalimiz
           </a>
-        </div>
+               </div>
       </div>
 
       {/* Pastki qism */}

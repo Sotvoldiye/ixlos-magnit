@@ -65,25 +65,9 @@ console.log(name)
   };
 
   return (
-    <motion.div
-      variants={variants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      className="fixed inset-0 bg-black/40 flex justify-center items-center z-50"
-    >
-      <motion.div
-        ref={ref}
-        variants={variants}
-        className="bg-white p-6 rounded-md w-[320px] max-h-[90vh] overflow-y-auto shadow-lg relative"
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-4 text-gray-500 text-xl hover:text-black"
-        >
-          &times;
-        </button>
 
+
+<div>
         <h2 className="text-xl font-bold mb-4 text-center">Ro&apos;yxatdan o&apos;tish</h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
@@ -104,7 +88,7 @@ console.log(name)
             Kirish
           </button>
         </div>
-      </motion.div>
-    </motion.div>
+        </div>
+
   );
 }
