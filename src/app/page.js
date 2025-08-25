@@ -15,7 +15,10 @@ export default function Home() {
   const { data: productsData, isLoading: prodLoading } =
     useGetAllProductsQuery();
   const categories = data || [];
-
+    if(error){
+      <p>Xatolik server bilan bog'lanib bo'lmadi</p>
+      return
+    }
   return (
     <div className="min-h-screen  bg-gray-100">
       <div className="bg-white md:px-15  sm:px-2 md:block">

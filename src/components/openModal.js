@@ -32,7 +32,7 @@ export default function OpenModal({setOrderedItems,updateQuantity, quantities, s
   );
   // birinchi modalga kerak bo'lgan funksiya
   const finalizeOrder = () => {
-   if(totalPrice >= 100000){
+   if(totalPrice>=  1000){
  toast.success("Buyurtmangiz qabul qilindi");
     setOrderedItems((prev) => [
       ...prev,
@@ -40,7 +40,7 @@ export default function OpenModal({setOrderedItems,updateQuantity, quantities, s
     ]);
     setOpen(false);
    }else{
-    toast.error("Haridingiz 100 000 ga teng yoki undan oshsa buyurtma bera olasiz")
+    toast.error("Haridingiz 100 000 ga teng yoki undan oshsa yetkazib beriladi")
     setOpen(false)
     return
    }
