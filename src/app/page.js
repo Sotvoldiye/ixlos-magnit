@@ -16,7 +16,7 @@ export default function Home() {
     useGetAllProductsQuery();
   const categories = data || [];
     if(error){
-      <p>Xatolik server bilan bog'lanib bo'lmadi</p>
+      <p>Xatolik server bilan bog&aposlanib bo&aposlmadi</p>
       return
     }
   return (
