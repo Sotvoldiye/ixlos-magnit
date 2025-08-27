@@ -1,11 +1,17 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setBags, removerBags } from "@/lib/slice/Slice";
+import { useRouter } from "next/navigation";
+import { removerBags, addBags } from "@/lib/slice/Slice";
 import useProductCard from "@/hooks/ProductCard";
 import { toast } from "react-toastify";
-
+import {
+  useGetAllProductsQuery,
+  useGetAllOrdersQuery,
+  useCreateOrderMutation,
+} from "@/lib/api/productApi";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
 import OpenModal from "@/components/openModal";
@@ -15,168 +21,262 @@ import Image from "next/image";
 
 export default function BagsPage() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const bags = useSelector((state) => state.bags.items || []);
   const favorites = useSelector((state) => state.favorute.items || []);
   const user = useSelector((state) => state.user.user);
-
-  const [hydrated, setHydrated] = useState(false);
-  const [quantities, setQuantities] = useState({});
-  const [open, setOpen] = useState(false); // birinchi modal
-  const [selectedItems, setSelectedItems] = useState([]); // birinchi modal uchun
-  const [selectProduct, setSelectProduct] = useState(false); // ikkinchi modal
-  const [orderedItems, setOrderedItems] = useState(() => {
-    if (typeof window !== "undefined") {
-      return JSON.parse(localStorage.getItem("orderedItems") || "[]");
-    }
-    return [];
-  });
-  const [showContactInfoDialog, setShowContactInfoDialog] = useState(false);
-
-  // Modallar switch
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
+const userArr = user.user
+console.log(userArr)
+  const { data: products, isLoading: isProductsLoading } = useGetAllProductsQuery();
+  const { data: ordersData, isLoading: isOrdersLoading } = useGetAllOrdersQuery();
+  const [createOrder, { isLoading: isOrderLoading }] = useCreateOrderMutation();
 
   const { itemExistsIns, toggleFavorited } = useProductCard();
+  const [hydrated, setHydrated] = useState(false);
+  const [quantities, setQuantities] = useState({});
+  const [open, setOpen] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectProduct, setSelectProduct] = useState(false);
+  const [showContactInfoDialog, setShowContactInfoDialog] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [deliveryOption, setDeliveryOption] = useState("pickup");
+  const [paymentType, setPaymentType] = useState("");
+  const [address, setAddress] = useState("");
 
-  // LocalStorage bilan sync
+  const BASE_URL = "http://127.0.0.1:5000";
+
+  // Init quantities
   useEffect(() => {
-    const stored = localStorage.getItem("bags");
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      dispatch(setBags(parsed));
+    if (products && bags.length > 0 && !hydrated) {
       const qty = {};
-      parsed.forEach((item) => (qty[item.id] = 1));
+      bags.forEach((item) => {
+        const product = products.find((p) => p.id === item.id);
+        if (product) qty[item.id] = quantities[item.id] || 1;
+      });
       setQuantities(qty);
+      setHydrated(true);
     }
-    setHydrated(true);
-  }, [dispatch]);
+  }, [products, bags, hydrated]); // quantities olib tashlandi
 
+  // Redirect if not logged in
   useEffect(() => {
-    localStorage.setItem("orderedItems", JSON.stringify(orderedItems));
-  }, [orderedItems]);
+    if (hydrated && !userArr) router.push("/Auth");
+  }, [hydrated, userArr, router]);
+  // Monitor ordered items and add to bags if status is "completed"
+  useEffect(() => {
+    if (ordersData && userArr) {
+      const orderedItems = ordersData
+        .flatMap((order) =>
+          order.items.map((item) => ({
+            ...item,
+            order_id: order.id,
+            user_id: order.user_id,
+            status: order.status,
+          }))
+        )
+        .filter((item) => item.user_id === userArr.id) || [];
+      const completedOrders = orderedItems.filter((item) => item.status === "completed");
 
-  if (!hydrated) return <p className="text-center py-6">Yuklanmoqda...</p>;
-  if (bags.length === 0) return <p className="text-center py-6">Saqlangan mahsulotlar yo&apos;q</p>;
+      completedOrders.forEach((orderItem) => {
+        const productId = orderItem.product_id;
+        const isInBags = bags.some((bagItem) => bagItem.id === productId);
+        if (!isInBags) {
+          const product = products?.find((p) => p.id === productId);
+          if (product) {
+            dispatch(addBags({ id: productId, ...product }));
+          }
+        }
+      });
+    }
+  }, [ordersData, userArr.id, bags, products, dispatch]);
+
+  // Umumiy summani hisoblash
+  const calculateTotal = () => {
+    return selectedItems.reduce((sum, item) => sum + (quantities[item.id] || 1) * item.price, 0);
+  };
+
+  // Buyurtma berish funksiyasi
+const finalizeOrder = async () => {
+  const total = calculateTotal();
+  if (deliveryOption === "delivery" && total < 100000) {
+    toast.error("Yetqazib berish uchun umumiy summa kamida 100000 so'm bo'lishi kerak");
+    return;
+  }
+  if (deliveryOption === "delivery" && !address.trim()) {
+    toast.error("Iltimos, yetkazib berish manzilini kiriting");
+    return;
+  }
+  if(paymentType === "" ){
+    toast.error("To'lov turini tanlang")
+    return
+  }
+
+  const orderData = {
+    user_id: userArr.id,
+    total_amount: total,
+    payment_type: paymentType,
+    address: deliveryOption === "delivery" ? address : "Do'kondan olib ketish",
+    items: selectedItems.map((item) => ({
+      product_id: item.id,
+      quantity: quantities[item.id] || 1,
+      price: item.price,
+    })),
+  };
+
+
+  try {
+    const result = await createOrder(orderData).unwrap();
+    toast.success(`Buyurtma qabul qilindi. ID: ${result.id}`);
+    setSelectedItems([]);
+    setOpen(false);
+    setDeliveryOption("pickup");
+    setAddress("");
+    setPaymentType("");
+  } catch (error) {
+    const errorMessage =
+      error.data?.message || error.error || "Buyurtma berishda xatolik yuz berdi";
+    toast.error(errorMessage);
+  }
+};
+  // Modalda mahsulotni o'chirish
+  const removeFromModalOnly = (id) => {
+    setSelectedItems((prev) => {
+      const updated = prev.filter((item) => item.id !== id);
+      if (updated.length === 0) {
+        toast.info("Savat bo'sh");
+        setOpen(false);
+      }
+      return updated;
+    });
+  };
 
   const updateQuantity = (id, delta, stock) => {
     setQuantities((prev) => {
       const current = prev[id] || 1;
       const updated = current + delta;
       if (updated > stock) {
-        if (!toast.isActive(`stock-${id}`)) {
-          toast.error(`Maksimal miqdor: ${stock}`, { toastId: `stock-${id}` });
-        }
+        toast.error(`Maksimal miqdor: ${stock}`, { toastId: `stock-${id}` });
         return prev;
       }
       return { ...prev, [id]: Math.max(1, updated) };
     });
   };
 
-  const handleBuySingle = (item) => {
-    if (!user) {
-      setShowLoginModal(true);
-      return;
-    }
-
-    const isAlreadyOrdered = orderedItems.length > 0;
-    if (isAlreadyOrdered) {
-      toast.warning("Avvalgi buyurtmangiz tayyor emas. Yangi buyurtma bera olmaysiz.");
-      setSelectProduct(true);
-    } else {
-      toast.warning("Eslatma: Yetkazib berish faqat Mindonobod uchun mavjud!");
-      setSelectedItems([item]);
-      setOpen(true);
-    }
-  };
-
-  const handleBuyAll = () => {
-    if (!user) {
-      setShowLoginModal(true);
-      return;
-    }
-
-    const unOrderedItems = bags.filter(
-      (item) => !orderedItems.some((ord) => ord.id === item.id)
-    );
-
-    if (orderedItems.length > 0) {
-      toast.warning("Avvalgi buyurtmangiz tayyor emas. Yangi buyurtma bera olmaysiz.");
-      setSelectProduct(true);
-    } else if (unOrderedItems.length > 0) {
-      toast.warning("Eslatma: Yetkazib berish faqat Mindonobod uchun mavjud!");
-      setSelectedItems(unOrderedItems);
-      setOpen(true);
-    }
-  };
-
   const handleCardRemove = (item) => {
-    if (orderedItems.some((ord) => ord.id === item.id)) {
+    if (orderedItems.some((ord) => ord.product_id === item.id)) {
       setShowContactInfoDialog(true);
     } else {
       dispatch(removerBags({ id: item.id }));
     }
   };
 
-  const BASE_URL = "http://127.0.0.1:5000";
+  const getOrderButtonLabel = (status) => {
+    switch (status) {
+      case "pending":
+        return "Buyurtma tayyorlanmoqda";
+      case "processing":
+        return "Buyurtma ishlov berilmoqda";
+      case "shipped":
+        return "Buyurtma yetkazilmoqda";
+      case "completed":
+        return "Sotib olingan";
+      case "cancelled":
+        return "Buyurtma bekor qilindi";
+      default:
+        return "Sotib olish";
+    }
+  };
+
+  if (!hydrated || isProductsLoading || isOrdersLoading)
+    return <p className="text-center py-6">Yuklanmoqda...</p>;
+  if (!userArr.id) return null;
+  if (bags.length === 0)
+    return <p className="text-center py-6">Saqlangan mahsulotlar yo&apos;q</p>;
+
+  const orderedItems = ordersData
+    ?.flatMap((order) =>
+      order.items.map((item) => ({
+        ...item,
+        order_id: order.id,
+        user_id: order.user_id,
+        status: order.status,
+      }))
+    )
+    ?.filter((item) => item.user_id === userArr.id) || [];
 
   return (
     <>
+      {/* Bags Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 px-4 py-6">
         {bags.map((item) => {
-          const isInFavorites = itemExistsIns(favorites, item);
-          const isOrdered = orderedItems.some((ord) => ord.id === item.id);
+          const product = products?.find((p) => p.id === item.id) || item;
+          const isInFavorites = itemExistsIns(favorites, product);
+          const orderItem = orderedItems.find((ord) => ord.product_id === product.id);
+          const isOrdered = !!orderItem && !["cancelled", "completed"].includes(orderItem.status);
+
           const imageUrl =
-            item?.images?.length > 0 ? BASE_URL + item.images[0].url : "/no-image.png";
+            product?.images?.length > 0
+              ? `${BASE_URL}${product.images[0].url}`
+              : "/no-image.png";
 
           return (
-            <div key={item.id} className="bg-white shadow-md rounded-xl overflow-hidden border hover:shadow-lg transition px-2 py-2">
+            <div
+              key={product.id}
+              className="bg-white shadow-md rounded-xl overflow-hidden border hover:shadow-lg transition-transform transform hover:scale-105"
+            >
               <div className="flex flex-col relative w-full rounded-lg transition">
-                <div className="relative w-full flex items-center justify-end gap-2">
+                <div className="relative w-full flex items-center justify-end gap-2 p-2">
                   <i
-                    className={`text-md z-10 cursor-pointer ${
+                    className={`text-md cursor-pointer transition-colors ${
                       isInFavorites
                         ? "fas fa-heart text-red-500 scale-110"
                         : "far fa-heart text-gray-700 hover:text-red-400"
                     }`}
-                    onClick={() => toggleFavorited(item)}
+                    onClick={() => toggleFavorited(product)}
                   ></i>
                   <i
-                    className={`text-md z-10 cursor-pointer ${
-                      removerBags ? "fas fa-trash text-gray-500 scale-110" : "far fa-trash text-gray-700"
+                    className={`text-md cursor-pointer transition-colors ${
+                      orderItem
+                        ? "fas fa-trash text-gray-500 scale-110"
+                        : "fas fa-trash text-gray-700 hover:text-red-500"
                     }`}
-                    onClick={() => handleCardRemove(item)}
+                    onClick={() => handleCardRemove(product)}
                   ></i>
                 </div>
 
-                <Image src={imageUrl} alt={item?.name} className="w-full h-[200px] object-cover rounded-md" />
+                <Image
+                  src={imageUrl}
+                  alt={product?.name}
+                  width={300}
+                  height={300}
+                  className="w-full h-[200px] object-cover rounded-md"
+                />
 
-                <div className="flex justify-between items-center mt-2">
-                  <p className="text-sm font-medium text-gray-800 line-clamp-1 mt-2">{item?.name}</p>
-                <p className="text-[15px] text-gray-900 font-semibold">{item?.price} so&apos;m</p>
-
+                <div className="flex justify-between items-center mt-2 px-2">
+                  <p className="text-sm font-medium text-gray-800 line-clamp-1">
+                    {product?.name}
+                  </p>
+                  <p className="text-[15px] text-gray-900 font-semibold">
+                    {product?.price.toLocaleString()} so&apos;m
+                  </p>
                 </div>
-                <div className="flex justify-between items-center mt-2">
-                  <div className="flex gap-2 items-center">
-                    {isOrdered ? (
-                      <button className="border px-2 bg-gray-200">-</button>
-                    ) : (
-                      <button onClick={() => updateQuantity(item.id, -1, item.stock)} className="border px-2">-</button>
-                    )}
-                    <span>{quantities[item.id] || 1}</span>
-                    {isOrdered ? (
-                      <button className="border px-2 bg-gray-200">+</button>
-                    ) : (
-                      <button onClick={() => updateQuantity(item.id, 1, item.stock)} className="border px-2">+</button>
-                    )}
-                  </div>
 
+                <div className="flex justify-between items-center mt-2 px-2 pb-2">
                   <button
-                    className={`text-sm text-white py-1 px-3 rounded ${
-                      isOrdered ? "bg-gray-400" : "bg-green-600 hover:bg-green-600"
+                    className={`text-sm text-white py-1 px-3 rounded transition-colors ${
+                      isOrdered
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-green-600 hover:bg-green-700"
                     }`}
-                    onClick={() => (isOrdered ? handleCardRemove(item) : handleBuySingle(item))}
+                    onClick={() => {
+                      if (!isOrdered) {
+                        setSelectedItems([product]);
+                        setOpen(true);
+                      }
+                    }}
                   >
-                    {isOrdered ? "Buyurtma berildi" : "Sotib olish"}
+                    {orderItem ? getOrderButtonLabel(orderItem.status) : "Sotib olish"}
                   </button>
                 </div>
               </div>
@@ -185,30 +285,63 @@ export default function BagsPage() {
         })}
       </div>
 
-      <div className="text-center mb-10">
-        {bags.length < 2 ? "" : (
-          <button className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700" onClick={handleBuyAll}>
+      {/* Hammasini sotib olish tugmasi */}
+      {bags.filter(
+        (item) =>
+          !orderedItems.some(
+            (ord) =>
+              ord.product_id === item.id &&
+              !["cancelled", "completed"].includes(ord.status)
+          )
+      ).length > 1 && (
+        <div className="text-center mb-10">
+          <button
+            className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 transition-colors"
+            onClick={() => {
+              const unOrderedItems = bags.filter(
+                (item) =>
+                  !orderedItems.some(
+                    (ord) =>
+                      ord.product_id === item.id &&
+                      !["cancelled", "completed"].includes(ord.status)
+                  )
+              );
+              if (unOrderedItems.length === 0) {
+                toast.info("Buyurtma qilinadigan mahsulotlar yo'q");
+                return;
+              }
+              setSelectedItems(unOrderedItems);
+              setOpen(true);
+            }}
+          >
             Hammasini sotib olish
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Birinchi modal */}
-      <OpenModal
-        setOrderedItems={setOrderedItems}
-        updateQuantity={updateQuantity}
-        quantities={quantities}
-        selectedItems={selectedItems}
-        setSelectedItems={setSelectedItems}
-        setOpen={setOpen}
-        open={open}
-      />
-      {/* Ikkinchi modal */}
+      {/* Modals */}
+<OpenModal
+  updateQuantity={updateQuantity}
+  quantities={quantities}
+  selectedItems={selectedItems}
+  setSelectedItems={setSelectedItems}
+  setOpen={setOpen}
+  open={open}
+  deliveryOption={deliveryOption}
+  setDeliveryOption={setDeliveryOption}
+  paymentType={paymentType}
+  setPaymentType={setPaymentType}
+  address={address}
+  setAddress={setAddress}
+  calculateTotal={calculateTotal}
+  finalizeOrder={finalizeOrder}
+  isOrderLoading={isOrderLoading}
+/>
       <SelectedProduct setSelectProduct={setSelectProduct} selectProduct={selectProduct} />
-      {/* Uchinchi modal */}
-      <ShowContactDialog setShowContactInfoDialog={setShowContactInfoDialog} showContactInfoDialog={showContactInfoDialog} />
-
-      {/* Login / Register modallar */}
+      <ShowContactDialog
+        setShowContactInfoDialog={setShowContactInfoDialog}
+        showContactInfoDialog={showContactInfoDialog}
+      />
       {showLoginModal && (
         <Login
           onClose={() => setShowLoginModal(false)}
@@ -218,7 +351,6 @@ export default function BagsPage() {
           }}
         />
       )}
-
       {showRegisterModal && (
         <Register
           onClose={() => setShowRegisterModal(false)}
@@ -229,10 +361,94 @@ export default function BagsPage() {
         />
       )}
 
+      {/* Buyurtma berilgan mahsulotlar */}
       {orderedItems.length > 0 && (
-        <p className="text-center text-green-600 font-medium my-4">
-          Buyurtmangiz tayyorlanmoqda...
-        </p>
+        <div className="mt-10 px-4 mb-4">
+          <h3 className="text-xl font-semibold mb-4">Buyurtma berilgan mahsulotlar</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {orderedItems
+              .filter((item) => item.status !== "completed")
+              .map((item) => {
+                const product = products?.find((p) => p.id === item.product_id) || {};
+                const imageUrl = product.images?.[0]
+                  ? `${BASE_URL}${product.images[0].url}`
+                  : "/no-image.png";
+                return (
+                  <div
+                    key={item.product_id + "-" + item.order_id}
+                    className="bg-gray-100 p-3 rounded-lg shadow hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={imageUrl}
+                        alt={product.name}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <div>
+                        <p className="font-medium text-gray-800 line-clamp-1">{product.name}</p>
+                        <p className="text-sm text-gray-700">
+                          {item.price.toLocaleString()} so&apos;m x {item.quantity}
+                        </p>
+                        <p
+                          className={`mt-1 font-semibold ${
+                            item.status === "pending"
+                              ? "text-orange-500"
+                              : item.status === "processing"
+                              ? "text-blue-500"
+                              : item.status === "shipped"
+                              ? "text-purple-500"
+                              : "text-red-500"
+                          }`}
+                        >
+                          {getOrderButtonLabel(item.status)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      )}
+
+      {/* Sotib olingan mahsulotlar */}
+      {orderedItems.filter((item) => item.status === "completed").length > 0 && (
+        <div className="mt-10 px-4 mb-4">
+          <h3 className="text-xl font-semibold mb-4">Sotib olingan mahsulotlar</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {orderedItems
+              .filter((item) => item.status === "completed")
+              .map((item) => {
+                const product = products?.find((p) => p.id === item.product_id) || {};
+                const imageUrl = product.images?.[0]
+                  ? `${BASE_URL}${product.images[0].url}`
+                  : "/no-image.png";
+                return (
+                  <div
+                    key={item.product_id + "-" + item.order_id}
+                    className="bg-gray-100 p-3 rounded-lg shadow hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={imageUrl}
+                        alt={product.name}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <div>
+                        <p className="font-medium text-gray-800 line-clamp-1">{product.name}</p>
+                        <p className="text-sm text-gray-700">
+                          {item.price.toLocaleString()} so‘m x {item.quantity}
+                        </p>
+                        <p className="mt-1 font-semibold text-green-600">
+                          {getOrderButtonLabel(item.status)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
       )}
     </>
   );

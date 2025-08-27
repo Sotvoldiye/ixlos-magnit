@@ -3,60 +3,65 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import style from "./topNav.module.css";
-
 import { useGetAllAdvertisementsQuery } from "@/lib/api/productApi";
 
 export default function HeroCarousel() {
   const { data: ads, isLoading } = useGetAllAdvertisementsQuery();
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
-  const nextSlide = () => {
-    setCurrent((prev) => (prev + 1) % ads.length);
-  };
-
-  const prevSlide = () => {
+console.log(ads)
+  const nextSlide = () => setCurrent((prev) => (prev + 1) % ads.length);
+  const prevSlide = () =>
     setCurrent((prev) => (prev - 1 + ads.length) % ads.length);
-  };
 
   useEffect(() => {
-    if (!paused && ads && ads.length > 0) {
+    if (!paused && ads?.length > 0) {
       const interval = setInterval(nextSlide, 5000);
       return () => clearInterval(interval);
     }
-  }, [current, paused, ads]); // ads ni ham dependency ga qo'shish kerak
+  }, [paused, ads]);
 
   if (isLoading) return <p className="text-center py-6">Yuklanmoqda...</p>;
   if (!ads || ads.length === 0)
     return <p className="text-center py-6">Reklama mavjud emas</p>;
+  const BASE_URL = "http://127.0.0.1:5000";
+
 
   return (
-    <div
-      className={`relative w-full h-[300px] overflow-hidden ${style.carusel}`}
-    >
+    <div className={`relative w-full h-[300px] md:h-[400px] overflow-hidden ${style.carusel}`}>
+      {/* Slides */}
       <div
         className="flex transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${current * 100}%)` }}
       >
-        {ads.map((ads) => (
-          <div key={ads.id} className="w-full flex-shrink-0 relative">
+        {ads.map((ad) => {
+         
+         const imageUrl =
+    ad?.image_url?.length > 0
+      ? BASE_URL + ad.image_url
+      : "/no-image.png";
+
+         return (<div key={ad.id} className="w-full flex-shrink-0 relative">
             <Image
-              src={ads.image_url || "/no-image.png"}
-              alt={ads.title || "Reklama rasm"}
-              width={1200}
+              src={imageUrl}
+              alt={ad.title || "Reklama rasm"}
+              width={180}
               height={300}
-              className={`w-full md:h-[300px] object-contain ${style.caruselImg}`}
+              className="w-full h-[300px] md:h-[400px] object-contain"
+              priority
             />
 
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-start px-8 md:px-16">
-              <div className="text-white max-w-md space-y-4">
-                <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-                  {ads.title}
+            {/* Text overlay */}
+            <div className="absolute inset-0 flex items-center justify-start px-4 md:px-16 bg-black/25">
+              <div className="text-white max-w-md space-y-2 md:space-y-4">
+                <h2 className="text-2xl md:text-5xl font-bold leading-tight">
+                  {ad.title}
                 </h2>
-                <p className="text-md md:text-lg">{ads.content}</p>
+                <p className="text-sm md:text-lg">{ad.content}</p>
               </div>
             </div>
-          </div>
-        ))}
+          </div>)
+})}
       </div>
 
       {/* Dots */}
@@ -73,7 +78,7 @@ export default function HeroCarousel() {
       </div>
 
       {/* Controls */}
-      <div className="absolute bottom-4 right-4 flex space-x-3 z-20">
+      <div className="absolute bottom-4 right-4 flex space-x-2 z-20">
         <button
           onClick={prevSlide}
           className="w-8 h-8 flex items-center justify-center rounded-full bg-green-500 hover:bg-green-600"
@@ -90,7 +95,11 @@ export default function HeroCarousel() {
           onClick={() => setPaused((prev) => !prev)}
           className="w-8 h-8 flex items-center justify-center rounded-full bg-green-500 hover:bg-green-600"
         >
-          {paused ? <i className="fa-solid fa-play text-white"></i> : <i className="fa-solid fa-pause text-white"></i>}
+          {paused ? (
+            <i className="fa-solid fa-play text-white"></i>
+          ) : (
+            <i className="fa-solid fa-pause text-white"></i>
+          )}
         </button>
       </div>
     </div>

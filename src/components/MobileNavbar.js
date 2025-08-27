@@ -22,7 +22,8 @@ export default function MobileNavbar() {
   const [login, setLogin] = useState(false);
 
   // 🔹 Redux hooklar ham yuqorida
-  const user = useSelector((state) => state.user.user);
+
+const user = useSelector((state) => state.user);
   const favoriteCount = useSelector((state) => state.favorite?.items?.length || 0);
   const bagCount = useSelector((state) => state.bag?.items?.length || 0);
 
@@ -62,7 +63,7 @@ export default function MobileNavbar() {
   // 🔹 Ma’lumotlar transformatsiyasi
   const categorie = Array.isArray(categoriesData) ? categoriesData : [];
   const categories = [...new Set(productsData?.products?.map((p) => p.category) || [])];
-  const firstLetter = user?.user?.charAt(0).toUpperCase() || "";
+  const firstLetter = user?.user?.name?.charAt(0).toUpperCase() || "";
 
 
   

@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useGetAllProductsQuery } from "@/lib/api/productApi";
-import Cards from "@/components/Cards";
+import Cards from "@/components/ProductCard";
 
 export default function SearchResultPage() {
   const searchParams = useSearchParams();

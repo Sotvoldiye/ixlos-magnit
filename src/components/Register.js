@@ -5,11 +5,14 @@ import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { useRegisterUserMutation } from "@/lib/api/productApi";
 import { useDispatch } from "react-redux";
-import { login } from "@/lib/slice/Slice"; // Redux action
+import { login } from "@/lib/slice/Slice";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function Register({ onClose, onOpenLogin }) {
   const ref = useRef();
+    const router = useRouter();
+  
   useOutsideClick(ref, onClose);
 
   const [name, setName] = useState("");
@@ -40,55 +43,98 @@ export default function Register({ onClose, onOpenLogin }) {
     }
 
     try {
-      const response = await registerUser({ username: name, email, password, number }).unwrap();
+      const response = await registerUser({ 
+        username: name, 
+        email, 
+        password, 
+        phone: number 
+      }).unwrap();
 
-      // Serverdan tokenni oling
-      const token = response.token; // misol uchun server JWT token qaytaradi
+      console.log("Register response:", response);
 
-      // Cookie ga saqlash (7 kun)
-      Cookies.set("token", token, { expires: 7 });
+      // Token va user ma'lumotlarini tekshirish
+      if (response.access_token && response.user) {
+        // Cookie ga saqlash
+        Cookies.set("token", response.access_token, { expires: 7 });
+        
+        // Redux state ga user ma'lumotini yozish
+        dispatch(login({ user: response.user }));
+        
+        toast.success("Muvaffaqiyatli ro'yxatdan o'tdingiz");
 
-      // Redux state ga user ma’lumotini yozish
-      dispatch(login({ user: name }));
-console.log(name)
-      toast.success("Muvaffaqiyatli ro'yxatdan o'tdingiz");
-      onClose();
+        if (onClose) onClose();
+
+               router.push("/");
+      } else {
+        toast.error("Serverdan noto'g'ri javob qaytdi");
+      }
     } catch (error) {
+      console.error("Register error:", error);
       toast.error(error?.data?.message || "Ro'yxatdan o'tishda xatolik yuz berdi");
     }
   };
 
-  const variants = {
-    hidden: { x: "100%", opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 30 } },
-    exit: { x: "100%", opacity: 0 },
-  };
-
   return (
+    <div>
+      <h2 className="text-xl font-bold mb-4 text-center">Ro&apos;yxatdan o&apos;tish</h2>
 
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <input 
+          type="text" 
+          placeholder="Ismingizni kiriting" 
+          value={name} 
+          onChange={(e) => setName(e.target.value)} 
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" 
+          required
+        />
+        <input 
+          type="email" 
+          placeholder="Emailni kiriting" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" 
+          required
+        />
+        <input 
+          type="tel" 
+          placeholder="Telefon raqamingizni kiriting" 
+          value={number} 
+          onChange={(e) => setNumber(e.target.value)} 
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" 
+        />
+        <input 
+          type="password" 
+          placeholder="Parol yarating" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" 
+          required
+          minLength={6}
+        />
+        <input 
+          type="password" 
+          placeholder="Parolni qayta kiriting" 
+          value={confirmPassword} 
+          onChange={(e) => setConfirmPassword(e.target.value)} 
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" 
+          required
+        />
 
-<div>
-        <h2 className="text-xl font-bold mb-4 text-center">Ro&apos;yxatdan o&apos;tish</h2>
+        <button 
+          type="submit" 
+          disabled={isLoading} 
+          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition disabled:opacity-50"
+        >
+          {isLoading ? "Yuklanmoqda..." : "Ro'yxatdan o'tish"}
+        </button>
+      </form>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <input type="text" placeholder="Ismingizni kiriting" value={name} onChange={(e) => setName(e.target.value)} className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" />
-          <input type="text" placeholder="Emailni kiriting" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" />
-          <input type="number" placeholder="Telefon raqamingizni kiriting" value={number} onChange={(e) => setNumber(e.target.value)} className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" />
-          <input type="password" placeholder="Parol yarating" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" />
-          <input type="password" placeholder="Parolni qayta kiriting" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500" />
-
-          <button type="submit" disabled={isLoading} className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition disabled:opacity-50">
-            {isLoading ? "Yuklanmoqda..." : "Ro'yxatdan o'tish"}
-          </button>
-        </form>
-
-        <div className="text-xs text-center mt-4">
-          Hisobingiz bormi?{" "}
-          <button onClick={onOpenLogin} className="text-green-600 underline hover:text-green-800">
-            Kirish
-          </button>
-        </div>
-        </div>
-
+      <div className="text-xs text-center mt-4">
+        Hisobingiz bormi?{" "}
+        <button onClick={onOpenLogin} className="text-green-600 underline hover:text-green-800">
+          Kirish
+        </button>
+      </div>
+    </div>
   );
 }

@@ -1,55 +1,42 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import storage from "redux-persist/lib/storage";
+import { persistReducer, persistStore } from "redux-persist";
+import thunk from "redux-thunk";
+
 import {
   counterReducer,
   cartReducer,
   userReducer,
   favoruteReducer,
   bagReducer,
-} from './slice/Slice';
-import { productApi } from './api/productApi';
+} from "./slice/Slice";
+import { productApi } from "./api/productApi";
 
-// Bu qism serverda ish bermaydi, faqat browserda
-const FavoritesLocalStorage = () => {
-  if (typeof window !== 'undefined') {
-    try {
-      const serialized = localStorage.getItem("favorite");
-      return serialized ? JSON.parse(serialized) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-  return [];
-};
-
-const BagsLocalStorage = () => {
-  if (typeof window !== 'undefined') {
-    try {
-      const serialized = localStorage.getItem("bags");
-      return serialized ? JSON.parse(serialized) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-  return [];
-};
-
-const preloadedState = typeof window !== 'undefined' ? {
-  favorute: { items: FavoritesLocalStorage() },
-  bags: { items: BagsLocalStorage() },
-} : {};
-
-const store = configureStore({
-  reducer: {
-    [productApi.reducerPath]: productApi.reducer,
-    counter: counterReducer,
-    cart: cartReducer,
-    user: userReducer,
-    favorute: favoruteReducer,
-    bags:bagReducer,
-  }, 
-  preloadedState, // ← bu joy muhim
-  middleware: (getDefaultMiddleware) =>
-  getDefaultMiddleware().concat(productApi.middleware),
+// Root reducer
+const rootReducer = combineReducers({
+  [productApi.reducerPath]: productApi.reducer,
+  counter: counterReducer,
+  cart: cartReducer,
+  user: userReducer,
+  favorute: favoruteReducer,
+  bags: bagReducer,
 });
 
-export default store;
+// Persist config
+const persistConfig = {
+  key: "root",
+  storage,
+  blacklist: [productApi.reducerPath], // API cacheni persist qilish shart emas
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+   middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({      serializableCheck: false, // persist uchun zarur
+}).concat(productApi.middleware),
+  devTools: process.env.NODE_ENV !== 'production',
+});
+
+export const persistor = persistStore(store);

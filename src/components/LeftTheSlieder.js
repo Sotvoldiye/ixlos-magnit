@@ -1,16 +1,47 @@
+import { logout } from '@/lib/slice/Slice';
+import Link from 'next/link';
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 export default function LeftTheSlieder() {
+  const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch()
+    const handleLogout = () => {
+      dispatch(logout());
+      localStorage.removeItem("avatarColor");
+    };
   return (
     <div>
-                <div className="flex flex-col gap-2 bg-gradient-to-t from-green-600 to-green-300 p-4 rounded-lg">
-            <button className="bg-white w-40 py-2 rounded-md">
+         
+      {user ?<div className="grid grid-cols-2 grid-rows-2 gap-2 bg-gradient-to-t from-emerald-600 to-emerald-300 p-4 sm:rounded-xl shadow-md">
+  <Link href="/saqlangan" className="flex justify-center items-center">
+    <i className="fas fa-heart p-3 bg-white rounded-sm text-emerald-600 hover:text-emerald-800 transition duration-200"></i>
+  </Link>
+  <Link href="/saralangan" className="flex justify-center items-center">
+    <i className="fas fa-shopping-cart p-3 bg-white rounded-sm text-emerald-600 hover:text-emerald-800 transition duration-200"></i>
+  </Link>
+  {user && (
+    <div className="flex justify-center items-center">
+      <i
+        className="fa-solid fa-right-from-bracket p-3  bg-white rounded-sm text-emerald-600 hover:text-emerald-800 cursor-pointer transition duration-200"
+        title="Chiqish"
+        onClick={handleLogout}
+      ></i>
+    </div>
+  )}
+  {/* To'ldiruvchi element, agar uchinchi qator kerak bo'lsa */}
+  <div className="hidden sm:block"></div>
+</div> :          <div className="flex flex-col gap-2 bg-gradient-to-t from-green-600 to-green-300 p-4 rounded-lg">
+            <h2 className='text-center text-gray-100'>
+Xush kelibsiz</h2>
+<p className='text-center'>Barcha xususiyatlardan foydalanish uchun tizimga kiring</p>
+            <button className="bg-white w-full py-2 rounded-md">
               Ro&apos;yhatdan o&apos;tish
             </button>
-            <button className="bg-green-300 w-40 py-2 text-green-900 rounded-md">
+            <button className="bg-green-300 w-full py-2 text-green-900 rounded-md">
               Kirish
             </button>
-          </div>
+          </div>}
               <div className="">
           <h2 className="text-md font-semibold mt-2">Bizning manzil</h2>
           <div className="w-full h-[100px] md:h-[150px] border rounded-lg overflow-hidden">

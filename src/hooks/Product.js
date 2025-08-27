@@ -1,26 +1,48 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useCreateOrderMutation } from "@/lib/api/productApi";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
+export default function ProductOrder({ item, user, quantities, setOrderedItems }) {
+  const [createOrder] = useCreateOrderMutation();
+  const router = useRouter();
 
-export default function BuyButton({ product, quantity, onBuy, setShowLoginModal }) {
-  const user = useSelector((state) => state.user.user);
-
-  const handleBuy = () => {
+  const handleBuySingle = async () => {
     if (!user) {
-      setShowLoginModal(true);
+      router.push("/auth");
       return;
     }
-    onBuy?.();
+
+    const orderData = {
+      user_id: user.id,
+      total_amount: item.price * (quantities[item.id] || 1),
+      items: [
+        {
+          product_id: item.id,
+          quantity: quantities[item.id] || 1,
+          price: item.price,
+        },
+      ],
+    };
+
+    try {
+      const res = await createOrder(orderData).unwrap();
+      toast.success(`Buyurtma qabul qilindi: ${res.id}`);
+      setOrderedItems((prev) => [...prev, res]);
+    } catch (err) {
+      toast.error("Buyurtma berishda xatolik yuz berdi");
+      console.error(err);
+    }
   };
 
   return (
     <button
-      onClick={handleBuy}
-      className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+      onClick={handleBuySingle}
+      className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
     >
-      Xarid qilish
+      Sotib olish
     </button>
   );
 }

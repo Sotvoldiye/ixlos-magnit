@@ -1,22 +1,26 @@
-import React from 'react'
-import { Skeleton } from './ui/skeleton'
+'use client';
 
-export default function TopNavbarScleton() {
-    
+export default function TopNavbarSkeleton() {
   return (
-    <div className="flex gap-5 flex-col my-4 mx-4">
-<div className="flex gap-[40%]">
-<Skeleton className="w-[40%] h-4"/>
-<Skeleton className="w-[20%] h-4"/>
-</div>
-<div className="flex gap-[1%]">
-    <Skeleton className="w-[13%] h-10"/>
-    <Skeleton className="w-[77%] h-10"/>
-    <Skeleton className="w-[8%] h-10"/>
-</div>
-<div>
-   <Skeleton className="w-[100%] h-8"/>
-</div>
-    </div>
-  )
+    <header className="hidden md:flex bg-gray-200 h-36 animate-pulse">
+      <div className="w-full max-w-7xl mx-auto flex items-center justify-between py-2 px-6 gap-4">
+        {/* Logo skeleton */}
+        <div className="w-32 h-16 bg-gray-300 rounded-lg"></div>
+
+        {/* Qidiruv paneli skeleton */}
+        <div className="flex flex-grow items-center gap-4">
+          <div className="flex flex-grow h-10 bg-gray-300 rounded-lg"></div>
+        </div>
+
+        {/* TopNavbar skeleton (avatar va ikonalar) */}
+        <div className="flex items-center gap-6">
+          {/* Avatar */}
+          <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+          {/* Saralangan va Saqlangan ikonalar */}
+          <div className="w-6 h-6 bg-gray-300 rounded-full"></div>
+          <div className="w-6 h-6 bg-gray-300 rounded-full"></div>
+        </div>
+      </div>
+    </header>
+  );
 }

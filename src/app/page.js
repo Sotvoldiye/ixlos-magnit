@@ -27,19 +27,23 @@ export default function Home() {
         <CategoriesList categories={categories} products={productsData || []} />
       </div>
       <main className="md:px-15 sm:px-2">
-        <div className=" lg:flex lg:items-start md:flex md:items-start md:gap-4 md:py-3 sm:py-3 lg:py-3 py-0 sm:grid sm:grid-cols-3 ">
-          <div className="sm:col-span-1 md:inline lg:inline hidden">
-            <CategoryListY categories={categories} />
-          </div>
-          <div className="sm:col-span-2">
-            <HeroCarousel />
-          </div>
+<div className="flex flex-col lg:flex-row py-3 gap-4">
+  {/* Kategoriya listi */}
+  <div className=" max-w-70 hidden sm:hidden lg:block">
+    <CategoryListY categories={categories} />
+  </div>
 
-          {/* Button container */}
-          <div className=" hidden sm:hidden md:inline ">
-            <LeftTheSlieder />
-          </div>
-        </div>
+  {/* Karusel */}
+  <div className="flex-1">
+    <HeroCarousel />
+  </div>
+
+  {/* Button container */}
+  <div className="max-w-60 hidden sm:hidden lg:block">
+    <LeftTheSlieder />
+  </div>
+</div>
+
 
         <Category />
       </main>
