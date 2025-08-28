@@ -3,11 +3,11 @@ import React, { useRef, useState, useEffect } from "react";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { login } from "@/lib/slice/Slice";
+import { login, logout } from "@/lib/slice/Slice";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { useLoginMutation } from "@/lib/api/productApi"; // ✅ RTK query login
-import { ClipLoader } from "react-spinners"; // optional loading spinner
+import { useLoginMutation } from "@/lib/api/productApi";
+import { ClipLoader } from "react-spinners";
 
 export default function Login({ onClose, onOpenRegister }) {
   const ref = useRef();
@@ -17,8 +17,31 @@ export default function Login({ onClose, onOpenRegister }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [loginUser, { isLoading }] = useLoginMutation(); // ✅ RTK query hook
+  const [loginUser, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
+
+  const setTokenWithSeconds = (token, seconds) => {
+    const expiryDate = new Date(new Date().getTime() + seconds * 1000);
+    Cookies.set("token", token, {
+      expires: expiryDate,
+      path: "/",
+      secure: true,
+      sameSite: "Strict",
+    });
+  };
+
+  // Token muddatini kuzatish
+  useEffect(() => {
+    const checkTokenExpiration = setInterval(() => {
+      const token = Cookies.get("token");
+      if (!token) {
+        dispatch(logout()); // Redux state'dan foydalanuvchini o'chirish
+        router.push("/Auth"); // Auth sahifasiga yo'naltirish
+      }
+    }, 5000); // Har 5 soniyada tekshirish
+
+    return () => clearInterval(checkTokenExpiration); // Komponent unmount bo'lganda intervalni tozalash
+  }, [dispatch, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,17 +55,16 @@ export default function Login({ onClose, onOpenRegister }) {
       const data = await loginUser({ username, password }).unwrap();
 
       if (data.access_token && data.user) {
-        // Cookie ga tokenni yozamiz
-        Cookies.set("token", data.access_token, { expires: 7 });
-
-        // Redux user slice'ga yozamiz
+        setTokenWithSeconds(data.access_token, 10800); // 3 soat (10800 soniya)
         dispatch(login({ user: data.user }));
+        localStorage.removeItem("sessionExpiredToast"); // Yangi sessiya uchun xabarni tiklash
 
         toast.success("Kirish muvaffaqiyatli!");
         if (onClose) onClose();
 
-        // Router bilan boshqa sahifaga yuborish (masalan account yoki home)
-        router.push("/");
+        const redirectPath = Cookies.get("redirectAfterLogin") || "/";
+        router.push(redirectPath);
+        Cookies.remove("redirectAfterLogin");
       } else {
         throw new Error("Server noto‘g‘ri javob qaytardi");
       }

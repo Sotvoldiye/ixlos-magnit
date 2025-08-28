@@ -3,10 +3,12 @@ import "./globals.css";
 import { Geist, Geist_Mono } from "next/font/google";
 import ReduxProvider from "./provider";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import 'react-phone-input-2/lib/style.css';
-import RootRedirect from "@/components/ROoRedirect";
-import LayoutWrapper from "@/components/LayoutWrapper"; // 👈 qo‘shish kerak
+import "react-toastify/dist/ReactToastify.css";
+import "react-phone-input-2/lib/style.css";
+
+import SessionManager from "@/components/SessionManeger";
+import ClientWrapper from "./ClientWrapper";
+import LayoutWrapper from "@/components/LayoutWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,9 +42,11 @@ export default function RootLayout({ children }) {
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ReduxProvider>
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
+          <ClientWrapper>
+                          <SessionManager />
+
+            <LayoutWrapper>{children}</LayoutWrapper>
+          </ClientWrapper>
           <ToastContainer />
         </ReduxProvider>
       </body>

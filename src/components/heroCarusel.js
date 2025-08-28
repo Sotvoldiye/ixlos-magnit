@@ -9,7 +9,6 @@ export default function HeroCarousel() {
   const { data: ads, isLoading } = useGetAllAdvertisementsQuery();
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
-console.log(ads)
   const nextSlide = () => setCurrent((prev) => (prev + 1) % ads.length);
   const prevSlide = () =>
     setCurrent((prev) => (prev - 1 + ads.length) % ads.length);

@@ -1,3 +1,4 @@
+// useProductCard.js
 import { useDispatch, useSelector } from "react-redux";
 import {
   addBags,
@@ -6,34 +7,32 @@ import {
   removerBags,
 } from "@/lib/slice/Slice";
 
-// Custom hook
 export default function useProductCard(item) {
   const dispatch = useDispatch();
-  const favorites = useSelector((state) => state.favorute.items);
-  const bags = useSelector((state) => state.bags.items);
+  const favorites = useSelector((state) => state.favorute.items || []);
+  const bags = useSelector((state) => state.bags.items || []);
 
-const itemExistsIn = (list) => {
-  if (!item || !item.id) return false; // ✅ item mavjudligini tekshir
-  return Array.isArray(list) && list.some((el) => el && el.id === item.id);
-};
+  const itemExistsIn = (list) => {
+    if (!item || !item.id) return false; // Item mavjudligini tekshirish
+    return Array.isArray(list) && list.some((el) => el && el.id === item.id);
+  };
 
-const itemExistsIns = (list, itemOrId) => {
-  if (!Array.isArray(list)) return false;
+  const itemExistsIns = (list, itemOrId) => {
+    if (!Array.isArray(list)) return false;
 
-  if (typeof itemOrId === "object" && itemOrId !== null && itemOrId.id) {
-    return list.some((el) => el && el.id === itemOrId.id);
-  }
+    if (typeof itemOrId === "object" && itemOrId !== null && itemOrId.id) {
+      return list.some((el) => el && el.id === itemOrId.id);
+    }
 
-  if (typeof itemOrId === "number" || typeof itemOrId === "string") {
-    return list.some((el) => el && el.id === itemOrId);
-  }
+    if (typeof itemOrId === "number" || typeof itemOrId === "string") {
+      return list.some((el) => el && el.id === itemOrId);
+    }
 
-  return false;
-};
-
+    return false;
+  };
 
   const toggleFavorite = (e) => {
-    e.preventDefault();
+    e?.preventDefault?.(); // Ixtiyoriy event uchun xavfsiz chaqiruv
     if (itemExistsIn(favorites)) {
       dispatch(removeFavorute({ id: item.id }));
     } else {
@@ -41,8 +40,7 @@ const itemExistsIns = (list, itemOrId) => {
     }
   };
 
-  const toggleBags = (e) => {
-    e.preventDefault();
+  const toggleBags = () => { // Event parametri olib tashlandi
     if (itemExistsIn(bags)) {
       dispatch(removerBags({ id: item.id }));
     } else {
@@ -64,7 +62,7 @@ const itemExistsIns = (list, itemOrId) => {
       );
     }
   };
-  
+
   const toggleBaged = (product) => {
     if (itemExistsIns(bags, product)) {
       dispatch(removerBags({ id: product.id }));
@@ -79,7 +77,6 @@ const itemExistsIns = (list, itemOrId) => {
       );
     }
   };
-  
 
   return {
     favorites,
@@ -89,7 +86,6 @@ const itemExistsIns = (list, itemOrId) => {
     toggleFavorite,
     toggleBags,
     toggleFavorited,
-    toggleBaged
+    toggleBaged,
   };
 }
- 

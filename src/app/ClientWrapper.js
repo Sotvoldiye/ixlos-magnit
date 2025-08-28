@@ -2,35 +2,33 @@
 
 import { useEffect, useState } from "react";
 import SplashScreen from "@/components/SplashScreen";
-import LayoutWrapper from "@/components/LayoutWrapper";
 import { useDispatch, useSelector } from "react-redux";
-import { setFavoruteItems, login, logout } from "@/lib/slice/Slice";
-import { usePathname, useRouter } from "next/navigation";
+import { setFavoruteItems } from "@/lib/slice/Slice";
+import { usePathname } from "next/navigation";
 
 export default function ClientWrapper({ children }) {
   const [isClientReady, setIsClientReady] = useState(false);
   const [showSplash, setShowSplash] = useState(false);
   const dispatch = useDispatch();
   const favorites = useSelector((state) => state.favorute.items);
-
   const pathname = usePathname();
-  const router = useRouter();
-  const hiddenRoutes = ["/contact", "/privacy", "/terms"];
-  const isHiddenRoute = hiddenRoutes.includes(pathname);
-
 
   // Splash Screen
   useEffect(() => {
     const hasSeen = sessionStorage.getItem("hasSeenSplash");
-    if (!hasSeen) {
-      setShowSplash(true);
+    if (hasSeen) {
+      setIsClientReady(true);
+      return;
+    }
+
+    setShowSplash(true);
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+      setIsClientReady(true);
       sessionStorage.setItem("hasSeenSplash", "true");
-      const timer = setTimeout(() => {
-        setShowSplash(false);
-        setIsClientReady(true);
-      }, 3000);
-      return () => clearTimeout(timer);
-    } else setIsClientReady(true);
+    }, 3000); // 5 soniya
+
+    return () => clearTimeout(timer);
   }, []);
 
   // LocalStorage sync
@@ -44,18 +42,7 @@ export default function ClientWrapper({ children }) {
   }, [favorites]);
 
   if (!isClientReady && !showSplash) return null;
-  if (showSplash) return <SplashScreen />;
+  if (showSplash) return <SplashScreen onFinish={() => setIsClientReady(true)} />;
 
-  if (isHiddenRoute) {
-    return (
-      <div className="p-4">
-        <button onClick={() => router.back()} className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 transition">
-          ← Orqaga
-        </button>
-        <div className="mt-4">{children}</div>
-      </div>
-    );
-  }
-
-  return <LayoutWrapper>{children}</LayoutWrapper>;
+  return <>{children}</>;
 }

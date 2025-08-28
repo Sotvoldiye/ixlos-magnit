@@ -10,7 +10,7 @@ export default function TopNavbar() {
 
 
 const user = useSelector((state) => state.user);
-  const favoriteCount = useSelector((state) => state.favorite?.items?.length || 0); // Typo tuzatildi
+  const favoriteCount = useSelector((state) => state.favorute?.items?.length || 0); // Typo tuzatildi
   const bagCount = useSelector((state) => state.bags?.items?.length || 0);
   const [avatarColor, setAvatarColor] = useState('#ccc');
   const dispatch = useDispatch();
@@ -41,11 +41,9 @@ const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   };
 const usreArr = user?.user
 const namearr = usreArr?.user
-console.log(user)
-const firstLetter = userData?.username?.charAt(0)?.toUpperCase() || '';
-
+const firstLetter = namearr?.username?.charAt(0)?.toUpperCase() || '';
   return (
-    <div className="flex items-center gap-6">
+    <div className=" sm:flex lg:flex hidden md:flex items-center gap-6">
       {/* Avatar va User */}
       <div>
         {usreArr ? (
@@ -54,7 +52,7 @@ const firstLetter = userData?.username?.charAt(0)?.toUpperCase() || '';
               className="w-8 h-8 rounded-full flex items-center justify-center text-white font-semibold text-sm"
               style={{ backgroundColor: avatarColor }}
             >
-              {namearr?.username?.slice(0)}
+              {firstLetter}
             </div>
             <span className="text-sm font-medium text-gray-900">{namearr?.username}</span>
           </div>

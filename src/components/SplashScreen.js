@@ -2,7 +2,7 @@
 
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
-import style from "./SplashScreen.module.css";
+import style from "./SplashScreen.module.css"; // E'tibor bering
 import Image from "next/image";
 
 const rows = 12;
@@ -26,9 +26,9 @@ const SplashScreen = ({ onFinish }) => {
     const tl = gsap.timeline({
       onComplete: () => {
         containerRef.current.style.display = "none";
-        onFinish?.();
+        onFinish?.(); // ? bilan chaqirish — mavjud bo‘lsa
       },
-    }, [onFinish]);
+    },[onFinish]);
 
     tl.fromTo(
       tiles,
@@ -70,27 +70,19 @@ const SplashScreen = ({ onFinish }) => {
     <div ref={containerRef} className={style.splash_container}>
       {!showTiles && (
         <div className={style.imageWrapper}>
-          <Image
-            src="/images/grocery.jpg"
-            alt="Logo"
-            fill
-            className={style.full_logo}
-            priority
-          />
-        </div>
+  <Image
+    src="/images/grocery.jpg"
+    alt="Logo"
+    fill
+    className={style.full_logo}
+  />
+</div>
       )}
-
       {showTiles && <div className={style.grid}>{tiles}</div>}
 
-      {/* faqat kichik ekranlarda chiqadi */}
-      <div className={style.ixlos}>
-        <Image
-          src="/images/ixlosmagnit.svg"
-          alt="Ixlos Magnit Logo"
-          width={120}
-          height={40}
-        />
-      </div>
+       <div className={`text-center my-auto text-[30px] ${style.ixlos}`}> 
+      <img src="/images/ixlosmagnit.svg" alt=""/>
+       </div>
     </div>
   );
 };
