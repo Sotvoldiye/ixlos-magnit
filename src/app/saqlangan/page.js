@@ -17,6 +17,7 @@ import OpenModal from "@/components/openModal";
 import SelectedProduct from "@/components/SelectedProduct";
 import ShowContactDialog from "@/components/ShowContactDialog";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function BagsPage() {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ export default function BagsPage() {
   const { data: ordersData, isLoading: isOrdersLoading } = useGetAllOrdersQuery();
   const [createOrder, { isLoading: isOrderLoading }] = useCreateOrderMutation();
 
-  const { itemExistsIns, toggleFavorited } = useProductCard();
+  const { itemExistsIn, toggleFavorited } = useProductCard();
   const [hydrated, setHydrated] = useState(false);
   const [quantities, setQuantities] = useState({});
   const [open, setOpen] = useState(false);
@@ -245,7 +246,7 @@ export default function BagsPage() {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-4 px-2 sm:px-4 py-4 sm:py-6">
         {bags.map((item) => {
           const product = products?.find((p) => p.id === item.id) || item;
-          const isInFavorites = itemExistsIns(favorites, product);
+          const isInFavorites = itemExistsIn(favorites, product);
           const orderItem = orderedItems.find((ord) => ord.product_id === product.id);
           const isOrdered = !!orderItem && !["cancelled", "completed"].includes(orderItem.status);
 
@@ -257,9 +258,10 @@ export default function BagsPage() {
           return (
             <div
               key={product.id}
-              className="bg-white shadow-md rounded-xl overflow-hidden border hover:shadow-lg transition-transform transform hover:scale-105 flex flex-col"
+              className="flex flex-col relative w-full rounded-md border border-gray-200 shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
             >
-              <div className="flex items-center justify-end gap-2 p-2">
+              <div className="relative w-full">
+<div className="absolute top-2 right-2 flex flex-col gap-2 z-10">
                 <i
                   className={`text-md cursor-pointer transition-colors ${
                     isInFavorites
@@ -277,13 +279,17 @@ export default function BagsPage() {
                   onClick={() => handleCardRemove(product)}
                 ></i>
               </div>
+                <Link href={`/product/${product.id}`}>
               <Image
                 src={imageUrl}
                 alt={product?.name}
                 width={300}
                 height={300}
-                className="w-full h-[180px] sm:h-[200px] object-cover rounded-md"
+                className="w-full h-[180px] sm:h-[200px] object-cover rounded-md rounded-b-none"
               />
+              </Link>
+              </div>
+              
               <div className="flex-1 flex flex-col justify-between px-2 py-3">
                 <div className="flex justify-between items-center">
                   <p className="text-sm sm:text-base font-medium text-gray-800 line-clamp-1">
@@ -402,11 +408,13 @@ export default function BagsPage() {
                     className="bg-gray-100 p-3 rounded-lg shadow hover:shadow-md transition-shadow"
                   >
                     <div className="flex items-center gap-2">
+                       <Link href={`/product/${product.id}`}>
                       <img
                         src={imageUrl}
                         alt={product.name}
                         className="w-16 h-16 object-cover rounded"
                       />
+                      </Link>
                       <div>
                         <p className="font-medium text-gray-800 line-clamp-1">{product.name}</p>
                         <p className="text-sm text-gray-700">

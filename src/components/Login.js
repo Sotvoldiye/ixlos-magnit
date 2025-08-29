@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useLoginMutation } from "@/lib/api/productApi";
 import { ClipLoader } from "react-spinners";
 
-export default function Login({ onClose, onOpenRegister }) {
+export default function Login({ onClose, onSuccess }) {
   const ref = useRef();
   useOutsideClick(ref, onClose);
   const router = useRouter();
@@ -61,6 +61,7 @@ export default function Login({ onClose, onOpenRegister }) {
 
         toast.success("Kirish muvaffaqiyatli!");
         if (onClose) onClose();
+      if (onSuccess) onSuccess(); // ✅ onSuccess chaqiramiz
 
         const redirectPath = Cookies.get("redirectAfterLogin") || "/";
         router.push(redirectPath);
@@ -106,15 +107,7 @@ export default function Login({ onClose, onOpenRegister }) {
         </button>
       </form>
 
-      <div className="text-xs text-center mt-4">
-        Hisobingiz yo&apos;qmi?{" "}
-        <button
-          onClick={onOpenRegister}
-          className="text-green-600 underline hover:text-green-800"
-        >
-          Ro&apos;yxatdan o&apos;tish
-        </button>
-      </div>
+
     </div>
   );
 }

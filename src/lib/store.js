@@ -7,8 +7,9 @@ import {
   counterReducer,
   cartReducer,
   userReducer,
-  favoruteReducer,
+  
   bagReducer,
+  favoriteReducer,
 } from "./slice/Slice";
 import { productApi } from "./api/productApi";
 
@@ -18,7 +19,7 @@ const rootReducer = combineReducers({
   counter: counterReducer,
   cart: cartReducer,
   user: userReducer,
-  favorute: favoruteReducer,
+  favorute: favoriteReducer,
   bags: bagReducer,
 });
 

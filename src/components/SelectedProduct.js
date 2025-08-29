@@ -11,7 +11,7 @@ export default function SelectedProduct({selectProduct,setSelectProduct}) {
       <p className="text-sm text-gray-700">
          Buyurtma bekor qilish uchun quyidagi telefon raqam orqali biz bilan bog&#39;lanishingiz mumkin
       </p>
-      <p className="text-lg font-semibold mt-2">+998 (99) 305-77-83</p>
+      <p className="text-lg font-semibold mt-2">+998 (94) 194-97-47</p>
             <div className="mt-4 flex justify-end">
         <button onClick={() => setSelectProduct(false)} className="bg-green-600 text-white px-4 py-2 rounded">Yopish</button>
       </div>

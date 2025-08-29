@@ -11,7 +11,7 @@ export default function ShowContactDialog({showContactInfoDialog, setShowContact
         <p className="text-sm text-gray-700">
         Bergan buyurtmangizni bekor qilsh uchun biz bilan bog&#39;laning
         </p>
-        <p className="text-lg font-semibold mt-2">+998 (90) 305-77-83</p>
+        <p className="text-lg font-semibold mt-2">+998 (94) 194-97-47</p>
         <p className="text-sm text-gray-600 mt-1">Buyurtmangiz hozircha bekor qilnmaydi</p>
         <div className="mt-4 flex justify-end">
           <button onClick={() => setShowContactInfoDialog(false)} className="bg-green-600 text-white px-4 py-2 rounded">Yopish</button>

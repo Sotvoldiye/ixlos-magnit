@@ -9,7 +9,7 @@ import { login, logout } from "@/lib/slice/Slice";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
-export default function Register({ onClose, onOpenLogin }) {
+export default function Register({ onClose, onOpenLogin, onSuccess }) {
   const ref = useRef();
   const router = useRouter();
   
@@ -82,6 +82,7 @@ export default function Register({ onClose, onOpenLogin }) {
         toast.success("Muvaffaqiyatli ro'yxatdan o'tdingiz");
 
         if (onClose) onClose();
+      if (onSuccess) onSuccess(); // ✅ onSuccess chaqiramiz
 
         const redirectPath = Cookies.get("redirectAfterLogin") || "/";
         router.push(redirectPath);

@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -16,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Breadcrumb from "@/components/Breadcrump";
 import OpenModal from "@/components/openModal";
 import { AnimatePresence } from "framer-motion";
-import { addBags, addFavorute, removeFavorute, removerBags } from "@/lib/slice/Slice";
+import { addBags, addFavorite, removeFavorite, removerBags } from "@/lib/slice/Slice";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import SelectedProduct from "@/components/SelectedProduct";
@@ -38,7 +39,7 @@ export default function ProductPage() {
   const [quantities, setQuantities] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
   const [deliveryOption, setDeliveryOption] = useState("pickup");
-  const [paymentType, setPaymentType] = useState("naxt");
+  const [paymentType, setPaymentType] = useState("");
   const [address, setAddress] = useState("");
 
   const user = useSelector((state) => state.user.user);
@@ -66,11 +67,11 @@ export default function ProductPage() {
     if (products && params?.id) {
       const found = products.find((p) => String(p.id) === String(params.id));
       setProduct(found || null);
-      if (found) {
+      if (found && !quantities[found.id]) { // Only set if quantity isn't already defined
         setQuantities((prev) => ({ ...prev, [found.id]: 1 }));
       }
     }
-  }, [products, params?.id]);
+  }, [products, params?.id]); // Removed quantities from dependencies
 
   const updateQuantity = (id, delta, stock) => {
     setQuantities((prev) => {
@@ -128,10 +129,10 @@ export default function ProductPage() {
   const toggleFavorite = () => {
     const isFavorited = favorites.some((fav) => fav.id === product.id);
     if (isFavorited) {
-      dispatch(removeFavorute({ id: product.id }));
+      dispatch(removeFavorite({ id: product.id }));
       toast.success("Mahsulot sevimlilardan olib tashlandi");
     } else {
-      dispatch(addFavorute(product));
+      dispatch(addFavorite(product));
       toast.success("Mahsulot sevimlilarga qo‘shildi");
     }
   };
@@ -186,7 +187,7 @@ export default function ProductPage() {
       toast.error("Iltimos, yetkazib berish manzilini kiriting");
       return;
     }
-    if (!paymentType) {
+    if (paymentType === "") {
       toast.error("To‘lov turini tanlang");
       return;
     }
@@ -229,6 +230,9 @@ export default function ProductPage() {
   const productSubcategory = subcategories?.find((sub) => sub.id === product.subcategory_id);
   const productSubSubcategory = subsubcategories?.find((subsub) => subsub.id === product.subsubcategory_id);
 
+  // product.images ni tekshirish
+  const safeImages = Array.isArray(product.images) ? product.images : [];
+
   return (
     <div className="px-4 sm:px-6 lg:px-10">
       <Breadcrumb
@@ -244,7 +248,7 @@ export default function ProductPage() {
       <div className="py-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           <ProductGallery
-            images={product.images}
+            images={safeImages}
             toggleFavorite={toggleFavorite}
             isFavorited={isFavorited}
           />
@@ -290,11 +294,19 @@ export default function ProductPage() {
                 onClick={toggleBag}
                 variant={isInBag ? "destructive" : "green"}
                 className={`${
-                  isInBag && orderedItems.some((ord) => ord.product_id === product.id && !["cancelled", "completed"].includes(ord.status))
+                  isInBag &&
+                  orderedItems.some(
+                    (ord) => ord.product_id === product.id && !["cancelled", "completed"].includes(ord.status)
+                  )
                     ? "bg-gray-400 cursor-not-allowed"
                     : ""
                 } w-full sm:w-auto`}
-                disabled={isInBag && orderedItems.some((ord) => ord.product_id === product.id && !["cancelled", "completed"].includes(ord.status))}
+                disabled={
+                  isInBag &&
+                  orderedItems.some(
+                    (ord) => ord.product_id === product.id && !["cancelled", "completed"].includes(ord.status)
+                  )
+                }
               >
                 {isInBag ? "Savatdan olib tashlash" : "Savatga qo‘shish"}
               </Button>
@@ -322,7 +334,9 @@ export default function ProductPage() {
             isOrderLoading={false}
           />
         )}
-        {selectProduct && <SelectedProduct setSelectProduct={setSelectProduct} selectProduct={selectProduct} />}
+        {selectProduct && (
+          <SelectedProduct setSelectProduct={setSelectProduct} selectProduct={selectProduct} />
+        )}
       </AnimatePresence>
     </div>
   );

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-/* COUNTER SLICE */
+// COUNTER SLICE
 const counterInitialState = {
   products: {}, // { [productId]: { count: number, stock: number } }
 };
@@ -43,7 +43,7 @@ const counterSlice = createSlice({
   },
 });
 
-/* CART SLICE */
+// CART SLICE
 const cartInitialState = {
   items: [],
 };
@@ -64,56 +64,54 @@ const cartSlice = createSlice({
   },
 });
 
-/* FAVORUTE SLICE */
-const favoruteSlice = createSlice({
-  name: "favorute",
+// FAVORITE SLICE
+const favoriteSlice = createSlice({
+  name: "favorite",
   initialState: {
     items: [],
   },
   reducers: {
-    setFavoruteItems: (state, action) => {
+    setFavoriteItems: (state, action) => {
       state.items = action.payload;
     },
-    addFavorute: (state, action) => {
+    addFavorite: (state, action) => {
       const exists = state.items.find((item) => item.id === action.payload.id);
       if (!exists) {
         state.items.push(action.payload);
       }
     },
-    removeFavorute: (state, action) => {
+    removeFavorite: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload.id);
     },
   },
 });
 
-/* badge slice */
+// BAG SLICE
 const bagSlice = createSlice({
-  name: "bags",
+  name: "bag",
   initialState: {
     items: [],
   },
   reducers: {
     setBags: (state, action) => {
       state.items = action.payload;
-      localStorage.setItem("bags", JSON.stringify(state.items)); // ✅ darhol saqlansin
+      localStorage.setItem("bags", JSON.stringify(state.items));
     },
     addBags: (state, action) => {
       const exists = state.items.find((item) => item.id === action.payload.id);
       if (!exists) {
         state.items.push(action.payload);
-        localStorage.setItem("bags", JSON.stringify(state.items)); // ✅
+        localStorage.setItem("bags", JSON.stringify(state.items));
       }
     },
     removerBags: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload.id);
-      localStorage.setItem("bags", JSON.stringify(state.items)); // ✅
+      localStorage.setItem("bags", JSON.stringify(state.items));
     },
   },
 });
 
-/* USER SLICE */
-
-
+// USER SLICE
 const initialUser = typeof window !== "undefined"
   ? JSON.parse(sessionStorage.getItem("user")) || null
   : null;
@@ -135,19 +133,16 @@ const userSlice = createSlice({
   },
 });
 
-
-/* EXPORT ACTIONS */
-export const { increment, decrement, setStock, resetCounter } =
-  counterSlice.actions;
-
+// EXPORT ACTIONS
+export const { increment, decrement, setStock, resetCounter } = counterSlice.actions;
 export const { addToCart, removeFromCart } = cartSlice.actions;
-export const { login, logout, setAuthReady } = userSlice.actions;
-export const { setFavoruteItems, addFavorute, removeFavorute } =
-  favoruteSlice.actions;
+export const { login, logout } = userSlice.actions;
+export const { setFavoriteItems, addFavorite, removeFavorite } = favoriteSlice.actions;
 export const { setBags, addBags, removerBags } = bagSlice.actions;
-/* EXPORT REDUCERS */
+
+// EXPORT REDUCERS
 export const counterReducer = counterSlice.reducer;
 export const cartReducer = cartSlice.reducer;
 export const userReducer = userSlice.reducer;
-export const favoruteReducer = favoruteSlice.reducer;
+export const favoriteReducer = favoriteSlice.reducer;
 export const bagReducer = bagSlice.reducer;

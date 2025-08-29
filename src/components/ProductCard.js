@@ -8,16 +8,18 @@ import { toast } from "react-toastify";
 import { useGetAllOrdersQuery } from "@/lib/api/productApi";
 
 export default function Cards({ product }) {
-  const {
-    favorites,
-    bags,
-    itemExistsIn,
-    toggleFavorite,
-    toggleBags,
-  } = useProductCard(product);
+  // Hook'larni shartsiz chaqirish
+  const { itemExistsIn, toggleFavorite, toggleBags, favorute, bags } = useProductCard(product);
   const user = useSelector((state) => state.user.user);
-  const userArr = user?.user;
   const { data: ordersData, isLoading: isOrdersLoading } = useGetAllOrdersQuery();
+
+  // product null yoki undefined bo‘lsa, xatoni oldini olish
+  if (!product || !product.id) {
+    console.warn("Cards: product is invalid", product);
+    return null;
+  }
+
+  const userArr = user?.user;
 
   // API bazaviy URL
   const BASE_URL = "http://127.0.0.1:5000";
@@ -25,17 +27,17 @@ export default function Cards({ product }) {
   // Rasm URL ni yasash
   const imageUrl =
     product?.images?.length > 0
-      ? BASE_URL + product.images[0].url
+      ? `${BASE_URL}${product.images[0].url}`
       : "/no-image.png";
 
   // Buyurtma holatini tekshirish
   const handleToggleBags = () => {
+    const isInBags = itemExistsIn(bags, product); // Holatni oldindan tekshirish
+
     if (isOrdersLoading || !ordersData || !userArr) {
-      toggleBags(); // Agar ordersData hali yuklanmagan bo'lsa yoki foydalanuvchi login qilmagan bo'lsa, oddiy qo'shish yoki o'chirish
+      toggleBags();
       toast.success(
-        itemExistsIn(bags)
-          ? "Mahsulot savatdan olib tashlandi"
-          : "Mahsulot savatga qo‘shildi",
+        isInBags ? "Mahsulot savatdan olib tashlandi" : "Mahsulot savatga qo‘shildi",
         {
           toastId: `bag-toggle-${product.id}`,
         }
@@ -59,7 +61,7 @@ export default function Cards({ product }) {
     );
 
     // Agar mahsulot savatda bo'lsa va faol buyurtma bo'lsa, olib tashlashni taqiqlash
-    if (itemExistsIn(bags) && isActiveOrder) {
+    if (isInBags && isActiveOrder) {
       toast.error("Bu mahsulot uchun faol buyurtma mavjud, savatdan o'chirib bo'lmaydi!", {
         toastId: `active-order-remove-${product.id}`,
       });
@@ -69,9 +71,7 @@ export default function Cards({ product }) {
     // Savatga qo'shish yoki olib tashlash
     toggleBags();
     toast.success(
-      itemExistsIn(bags)
-        ? "Mahsulot savatdan olib tashlandi"
-        : "Mahsulot savatga qo‘shildi",
+      isInBags ? "Mahsulot savatdan olib tashlandi" : "Mahsulot savatga qo‘shildi",
       {
         toastId: `bag-toggle-${product.id}`,
       }
@@ -83,7 +83,7 @@ export default function Cards({ product }) {
       <div className="relative w-full">
         <i
           className={`text-xl absolute right-2 z-10 cursor-pointer ${
-            itemExistsIn(favorites)
+            itemExistsIn(favorute, product)
               ? "fas fa-heart text-red-500 scale-110"
               : "far fa-heart text-gray-700 hover:text-red-400"
           }`}
@@ -97,6 +97,7 @@ export default function Cards({ product }) {
             width={300}
             height={300}
             className="w-full h-[200px] object-cover rounded-md"
+            onError={(e) => (e.target.src = "/no-image.png")}
           />
         </Link>
       </div>
@@ -104,16 +105,16 @@ export default function Cards({ product }) {
       <div className="flex justify-between items-center">
         <Link href={`/product/${product.id}`}>
           <p className="text-sm font-medium text-gray-800 line-clamp-1">
-            {product?.name}
+            {product?.name || "N/A"}
           </p>
           <p className="text-[15px] text-gray-900 font-semibold">
-            {product?.price} so&apos;m
+            {product?.price ? `${product.price} so‘m` : "Narx mavjud emas"}
           </p>
         </Link>
 
         <i
           className={`fa-solid fa-cart-shopping text-[18px] text-gray-700 hover:bg-gray-200 py-[5px] px-[10px] rounded-full cursor-pointer transition ${
-            itemExistsIn(bags) ? "bg-gray-300 scale-110" : ""
+            itemExistsIn(bags, product) ? "bg-gray-300 scale-110" : ""
           }`}
           onClick={handleToggleBags}
         />
