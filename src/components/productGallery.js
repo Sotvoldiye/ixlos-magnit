@@ -48,7 +48,7 @@ const ProductGallery = ({ images, toggleFavorite, isFavorited }) => {
         {formattedImages.length > 4 && (
           <button
             onClick={handleScrollLeftOrUp}
-            className="absolute left-[-10px] md:top-[-10px] md:left-0 z-10 flex justify-center items-center  h-8 w-full bg-gray-800 text-white opacity-60 hover:bg-gray-600 transition-all"
+            className="absolute left-[-10px] md:top-[-10px] md:left-0 z-10 flex justify-center items-center  h-full md:h-8 sm:h-8 lg:h-8 w-5 md:w-full sm:w-full lg:w-full  bg-gray-800 text-white opacity-60 hover:bg-gray-600 transition-all"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +118,8 @@ const ProductGallery = ({ images, toggleFavorite, isFavorited }) => {
         {formattedImages.length > 4 && (
           <button
             onClick={handleScrollRightOrDown}
-            className="absolute right-[-10px] md:bottom-[-10px] md:right-0 z-10 flex justify-center items-center w-8 h-8 md:w-full bg-gray-800 text-white opacity-60 hover:bg-gray-600 transition-all"
+           className="absolute right-[-10px] md:bottom-[-10px] md:right-0 z-10 flex justify-center items-center  h-full md:h-8 sm:h-8 lg:h-8 w-5 md:w-full sm:w-full lg:w-full  bg-gray-800 text-white opacity-60 hover:bg-gray-600 transition-all"
+
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
